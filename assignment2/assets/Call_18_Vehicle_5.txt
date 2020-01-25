@@ -7641,7 +7641,7 @@
 3,39,39,0,0
 4,39,39,0,0
 5,39,39,0,0
-%  node times and costs: vehicle, call, origin node time (in hours), origin node costs (in �), destination node time (in hours), destination node costs (in �)
+%  node times and costs: vehicle, call, origin node time (in hours), origin node costs (in €), destination node time (in hours), destination node costs (in €)
 1,1,8,22243,14,31577
 1,2,13,22380,14,23768
 1,3,25,23768,26,25805
