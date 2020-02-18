@@ -21,7 +21,12 @@ This solution saves both time and costs, because the large ship does not need to
 
 My solution representation is a compact list, where each route are separated by the 0-blocks. 
 
-<img src=../assets/assignment1a_map.png height="500"/>
+<p align="center">
+<img src=../assets/assignment1a_map.png height="600"/>
+</p>
 
 ### Task 1b
 
+<p align="center">
+<img src=../assets/assignment1b_truck_drone_map.png width="400"/>
+</p>
