@@ -20,3 +20,8 @@ The smaller ships are travelling to different routes. *Route A* goes from port 5
 This solution saves both time and costs, because the large ship does not need to visit every port and the smaller shipping routes are being handled simultaneously. The large ship also need to be full of cargo to be financially beneficial, so off-loading a lot of cargo while not picking up any at the same port would eventually harm the economy.
 
 My solution representation is a compact list, where each route are separated by the 0-blocks. 
+
+<img src=../assets/assignment1a_map.png height="500"/>
+
+### Task 1b
+
