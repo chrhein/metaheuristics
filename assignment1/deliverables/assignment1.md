@@ -39,6 +39,6 @@ My solution representation is two lists, where the first represents the truck's 
 
 
 <p align="center">
-<img src=../assets/assignment1b_truck_drone_map.png width="400"/>
+<img src=../assets/assignment1b_truck_drone_map.png width="600"/>
 </p>
 
