@@ -27,6 +27,18 @@ My solution representation is a compact list, where each route are separated by 
 
 ### Task 1b
 
+| `0` | 10 | 9 | 7 | 3 | 1 | 6 | `0` |
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| 11 | 12 | 8 | 4 | 2 | 5 | -1 ||
+
+This is my solution representation to task 1b.
+
+The truck drives the shortest route, while a drone takes off from some of the stopping places to deliver packages to a nearby home. The drone can only visit one home at a time, before returning to the truck at its next stopping place. 
+
+My solution representation is two lists, where the first represents the truck's route. The second shows where the drones are destined from each of the trucks stopping places. After delivering the package from a drone, the drone flies to the next point on the truck's route. If the drone is parked on the truck between two stopping places on the truck's route, this is represented with *-1*.
+
+
 <p align="center">
 <img src=../assets/assignment1b_truck_drone_map.png width="400"/>
 </p>
+
