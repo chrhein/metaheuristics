@@ -77,7 +77,25 @@ routes_dict = {}
 next(line)
 for _ in range(vehicles * nodes * nodes):
     string_list = list(map(int, next(line).split(",")))
-    print(string_list)
-    routes_dict[string_list[0]] = Route(string_list[0], string_list[1], string_list[2], string_list[3], string_list[4])
+    e1 = string_list.pop(0)
+    e2 = string_list.pop(0)
+    e3 = string_list.pop(0)
 
-print(routes_dict)
+    key = (e1, e2, e3)
+
+    routes_dict[key] = string_list
+
+# node times and costs: vehicle, call, origin node time (in hours), origin node costs (in €), destination node time
+# (in hours), destination node costs (in €)
+nodes_costs_dict = {}
+next(line)
+for _ in range(calls * vehicles):
+    string_list = list(map(int, next(line).split(",")))
+    e1 = string_list.pop(0)
+    e2 = string_list.pop(0)
+
+    key = (e1, e2)
+
+    nodes_costs_dict[key] = string_list
+
+print(nodes_costs_dict)
