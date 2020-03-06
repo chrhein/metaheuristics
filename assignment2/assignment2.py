@@ -4,7 +4,7 @@ from typing import List
 
 @dataclass
 class Vehicle:
-    vehicle_id: int
+    vehicle_index: int
     home_node: int
     starting_time: int
     capacity: int
@@ -33,69 +33,112 @@ class Route:
     travel_cost: int
 
 
+@dataclass
+class Travel:
+    vehicle_id: int
+    origin_node: int
+    destination_node: int
+    travel_time: int
+    travel_cost: int
+
+
+@dataclass
+class Node:
+    vehicle_id: int
+    origin_node_time: int
+    origin_node_costs: int
+    dest_node_time: int
+    dest_node_costs: int
+
+
+# the next ~100 lines are for reading input text file
+# next(line) skips lines with comments in text file
+
+
 with open("assets/Call_18_Vehicle_5.txt", "r") as f:
     file = f.readlines()
 
 line = iter(file)
 
-# number of nodes
 next(line)
+
+# number of nodes
 nodes = int(next(line))
 
-# number of vehicles
 next(line)
+
+# number of vehicles
 vehicles = int(next(line))
 
-# for each vehicle: vehicle index, home node, starting time, capacity
 next(line)
+
+# for each vehicle: vehicle index, home node, starting time, capacity
 vehicles_dict = {}
 for _ in range(vehicles):
     string_list = list(map(int, next(line).split(",")))
     vehicles_dict[string_list[0]] = Vehicle(string_list[0], string_list[1], string_list[2], string_list[3])
 
-# number of calls
 next(line)
+
+# number of calls
 calls = int(next(line))
 
-# for each vehicle, vehicle index, and then a list of calls that can be transported using that vehicle
 next(line)
+
+# for each vehicle, vehicle index, and then a list of calls that can be transported using that vehicle
 for _ in range(vehicles):
     string_list = list(map(int, next(line).split(",")))
     vehicles_dict[string_list[0]].valid_calls.extend(string_list[1:])
 
+next(line)
+
 # for each call: call index, origin node, destination node, size, cost of not transporting, lb tw pu, ub tw pu,
 # lb tw d, ub tw d
 calls_dict = {}
-next(line)
 for _ in range(calls):
     string_list = list(map(int, next(line).split(",")))
     calls_dict[string_list[0]] = Call(string_list[0], string_list[1], string_list[2], string_list[3], string_list[4],
                                       string_list[5], string_list[6], string_list[7], string_list[8])
 
+next(line)
+
 # travel times and costs: vehicle, origin node, destination node, travel time (in hours), travel cost (in €)
 routes_dict = {}
-next(line)
 for _ in range(vehicles * nodes * nodes):
     string_list = list(map(int, next(line).split(",")))
     e1 = string_list.pop(0)
     e2 = string_list.pop(0)
     e3 = string_list.pop(0)
-
     key = (e1, e2, e3)
+    routes_dict[key] = Travel(e1, e2, e3, string_list[0], string_list[1])
 
-    routes_dict[key] = string_list
+next(line)
 
 # node times and costs: vehicle, call, origin node time (in hours), origin node costs (in €), destination node time
 # (in hours), destination node costs (in €)
 nodes_costs_dict = {}
-next(line)
 for _ in range(calls * vehicles):
     string_list = list(map(int, next(line).split(",")))
     e1 = string_list.pop(0)
     e2 = string_list.pop(0)
-
     key = (e1, e2)
+    nodes_costs_dict[key] = Node(e1, e2, string_list[0], string_list[1], string_list[2])
 
-    nodes_costs_dict[key] = string_list
 
-print(nodes_costs_dict)
+def print_input():
+    print(nodes)
+    print(vehicles)
+    print(vehicles_dict)
+    print(calls)
+    print(calls_dict)
+    print(routes_dict)
+    print(nodes_costs_dict)
+
+
+# function for generating a random solution
+def random_solution():
+    print("% EOF")
+
+
+print_input()
+random_solution()
