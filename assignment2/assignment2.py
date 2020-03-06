@@ -1,3 +1,4 @@
+import random
 from dataclasses import dataclass, field
 from typing import List
 
@@ -135,10 +136,31 @@ def print_input():
     print(nodes_costs_dict)
 
 
+def get_random_call():
+    call = calls_dict.get(random.randint(1, calls))
+    return call
+
+
 # function for generating a random solution
 def random_solution():
-    print("% EOF")
+    route = []
+    chosen_calls = []
+    for vehicle, value in vehicles_dict.items():
+        random_index = get_random_call().call_index
+        while random_index in chosen_calls and random_index in value.valid_calls:
+            random_index = get_random_call().call_index
+
+        call = random_index
+        chosen_calls.append(call)
+
+        # TODO
+        sub_route = []
+        sub_route.insert(random.randint(0, calls), call)
+        sub_route.insert(random.randint(0, calls), call)
+        sub_route.append(0)
+        route.append(sub_route)
+    print(route)
 
 
-print_input()
+# print_input()
 random_solution()
