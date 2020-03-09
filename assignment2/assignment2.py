@@ -166,7 +166,7 @@ def random_solution():
             chosen_calls[vi].append(call)
             vehicles_dict.get(j).valid_calls.remove(call)
             if (sum(len(item) for item in chosen_calls.values())) is calls:
-                print("Size of chosen_calls: ", sum(len(item) for item in chosen_calls.values()))
+                # print("Size of chosen_calls: ", sum(len(item) for item in chosen_calls.values()))
                 break
 
     for item, value in chosen_calls.items():
@@ -177,6 +177,13 @@ def random_solution():
         chosen_calls[item].append(0)
 
     route = chosen_calls.values()
-    print(route)
+
+    merged_routes = []
+    for value in route:
+        merged_routes = merged_routes + value
+
+    print("Random solution: ", (' '.join(map(str, merged_routes))))
+
+
 # print_input()
 random_solution()
