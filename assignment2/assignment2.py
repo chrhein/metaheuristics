@@ -144,24 +144,39 @@ def get_random_call():
 # function for generating a random solution
 def random_solution():
     route = []
-    chosen_calls = []
+    chosen_calls = {}
     i = 0
-    while len(chosen_calls) < calls:
-        vc = vehicles_dict.get(i % vehicles + 1).valid_calls
-        i += 1
+
+    while True:
+        j = i % vehicles + 1
+        vc = vehicles_dict.get(j).valid_calls
         call = random.choice(vc)
-        if call not in chosen_calls:
-            print("Call:", call)
-            chosen_calls.append(call)
-            print("i: ", i)
-            print(vc)
-            print(vehicles_dict.get(i % vehicles + 1))
-        else:
-            continue
+        i += 1
+        vi = vehicles_dict.get(j).vehicle_index
+        if vi not in chosen_calls:
+            chosen_calls[vi] = []
 
+        call_exists = False
+        for word_list in chosen_calls.values():
+            if call in word_list:
+                call_exists = True
+                break
 
-    print(chosen_calls)
+        if not call_exists:
+            chosen_calls[vi].append(call)
+            vehicles_dict.get(j).valid_calls.remove(call)
+            if (sum(len(item) for item in chosen_calls.values())) is calls:
+                print("Size of chosen_calls: ", sum(len(item) for item in chosen_calls.values()))
+                break
 
+    for item, value in chosen_calls.items():
+        duplicate = list(value)
+        random.shuffle(duplicate)
+        for items in duplicate:
+            chosen_calls[item].append(items)
+        chosen_calls[item].append(0)
 
+    route = chosen_calls.values()
+    print(route)
 # print_input()
 random_solution()
