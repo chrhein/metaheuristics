@@ -145,21 +145,22 @@ def get_random_call():
 def random_solution():
     route = []
     chosen_calls = []
-    for vehicle, value in vehicles_dict.items():
-        random_index = get_random_call().call_index
-        while random_index in chosen_calls and random_index in value.valid_calls:
-            random_index = get_random_call().call_index
+    i = 0
+    while len(chosen_calls) < calls:
+        vc = vehicles_dict.get(i % vehicles + 1).valid_calls
+        i += 1
+        call = random.choice(vc)
+        if call not in chosen_calls:
+            print("Call:", call)
+            chosen_calls.append(call)
+            print("i: ", i)
+            print(vc)
+            print(vehicles_dict.get(i % vehicles + 1))
+        else:
+            continue
 
-        call = random_index
-        chosen_calls.append(call)
 
-        # TODO
-        sub_route = []
-        sub_route.insert(random.randint(0, calls), call)
-        sub_route.insert(random.randint(0, calls), call)
-        sub_route.append(0)
-        route.append(sub_route)
-    print(route)
+    print(chosen_calls)
 
 
 # print_input()
