@@ -1,4 +1,4 @@
-from assets.random import random_solution
+from random_solution_generator import random_solution
 from veri import check_solution
 
 
