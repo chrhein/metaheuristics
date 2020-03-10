@@ -7,7 +7,7 @@ def print_input():
     print("Vehicle dataclasses: ", x.vehicles_dict)
     print("Number of calls: ", x.calls)
     print("Call dataclasses: ", x.calls_dict)
-    print("Travel times and costs: ", x.routes_dict)
+    print("Travel times and costs: ", x.travel_cost_dict)
     print("Node times and costs: ", x.nodes_costs_dict)
 
 

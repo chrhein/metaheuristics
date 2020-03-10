@@ -48,14 +48,14 @@ for _ in range(calls):
 next(line)
 
 # travel times and costs: vehicle, origin node, destination node, travel time (in hours), travel cost (in €)
-routes_dict = {}
+travel_cost_dict = {}
 for _ in range(vehicles * nodes * nodes):
     string_list = list(map(int, next(line).split(",")))
     e1 = string_list.pop(0)
     e2 = string_list.pop(0)
     e3 = string_list.pop(0)
     key = (e1, e2, e3)
-    routes_dict[key] = Travel(e1, e2, e3, string_list[0], string_list[1])
+    travel_cost_dict[key] = TravelCost(e1, e2, e3, string_list[0], string_list[1])
 
 next(line)
 
@@ -67,4 +67,4 @@ for _ in range(calls * vehicles):
     e1 = string_list.pop(0)
     e2 = string_list.pop(0)
     key = (e1, e2)
-    nodes_costs_dict[key] = Node(e1, e2, string_list[0], string_list[1], string_list[2])
+    nodes_costs_dict[key] = NodeCost(e1, e2, string_list[0], string_list[1], string_list[2])
