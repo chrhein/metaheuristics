@@ -1,3 +1,4 @@
+import datetime as dt
 import random
 from dataclasses import dataclass, field
 from typing import List
@@ -56,7 +57,7 @@ class Node:
 # next(line) skips lines with comments in text file
 
 
-with open("assets/Call_18_Vehicle_5.txt", "r") as f:
+with open("assets/Call_7_Vehicle_3.txt", "r") as f:
     file = f.readlines()
 
 line = iter(file)
@@ -143,47 +144,54 @@ def get_random_call():
 
 # function for generating a random solution
 def random_solution():
-    route = []
+    start = dt.datetime.now()
+
     chosen_calls = {}
     i = 0
-
-    while True:
+    k = 0
+    while (sum(len(item) for item in chosen_calls.values())) < calls:
         j = i % vehicles + 1
         vc = vehicles_dict.get(j).valid_calls
         call = random.choice(vc)
-        i += 1
         vi = vehicles_dict.get(j).vehicle_index
+        i += 1
+
         if vi not in chosen_calls:
             chosen_calls[vi] = []
-
         call_exists = False
         for word_list in chosen_calls.values():
             if call in word_list:
                 call_exists = True
                 break
-
         if not call_exists:
             chosen_calls[vi].append(call)
             vehicles_dict.get(j).valid_calls.remove(call)
             if (sum(len(item) for item in chosen_calls.values())) is calls:
                 # print("Size of chosen_calls: ", sum(len(item) for item in chosen_calls.values()))
                 break
+        k += 1
+
+    print("Size of chosen_calls: ", sum(len(item) for item in chosen_calls.values()))
 
     for item, value in chosen_calls.items():
-        duplicate = list(value)
-        random.shuffle(duplicate)
-        for items in duplicate:
+        deliveries = list(value)
+        random.shuffle(deliveries)
+        for items in deliveries:
             chosen_calls[item].append(items)
         chosen_calls[item].append(0)
 
-    route = chosen_calls.values()
-
     merged_routes = []
-    for value in route:
+    for value in chosen_calls.values():
         merged_routes = merged_routes + value
 
     print("Random solution: ", (' '.join(map(str, merged_routes))))
+    end = dt.datetime.now()
+    total_time = (end - start).total_seconds()
+    print("Completed in " + "%.6f" % total_time + " seconds.")
 
 
-# print_input()
-random_solution()
+def main():
+    random_solution()
+
+
+main()
