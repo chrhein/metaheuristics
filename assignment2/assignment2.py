@@ -1,191 +1,21 @@
 import datetime as dt
 import random
-from dataclasses import dataclass, field
-from typing import List
 
-
-@dataclass
-class Vehicle:
-    vehicle_index: int
-    home_node: int
-    starting_time: int
-    capacity: int
-    valid_calls: List[int] = field(default_factory=lambda: list())
-
-
-@dataclass
-class Call:
-    call_index: int
-    origin_node: int
-    destination_node: int
-    size: int
-    cost_no_transport: int
-    lb_tw_pu: int
-    ub_tw_pu: int
-    lb_tw_d: int
-    ub_tw_d: int
-
-
-@dataclass
-class Route:
-    vehicle_id: int
-    origin_node: int
-    destination_node: int
-    travel_time: int
-    travel_cost: int
-
-
-@dataclass
-class Travel:
-    vehicle_id: int
-    origin_node: int
-    destination_node: int
-    travel_time: int
-    travel_cost: int
-
-
-@dataclass
-class Node:
-    vehicle_id: int
-    origin_node_time: int
-    origin_node_costs: int
-    dest_node_time: int
-    dest_node_costs: int
-
-
-# the next ~100 lines are for reading input text file
-# next(line) skips lines with comments in text file
-
-
-with open("assets/Call_7_Vehicle_3.txt", "r") as f:
-    file = f.readlines()
-
-line = iter(file)
-
-next(line)
-
-# number of nodes
-nodes = int(next(line))
-
-next(line)
-
-# number of vehicles
-vehicles = int(next(line))
-
-next(line)
-
-# for each vehicle: vehicle index, home node, starting time, capacity
-vehicles_dict = {}
-for _ in range(vehicles):
-    string_list = list(map(int, next(line).split(",")))
-    vehicles_dict[string_list[0]] = Vehicle(string_list[0], string_list[1], string_list[2], string_list[3])
-
-next(line)
-
-# number of calls
-calls = int(next(line))
-
-next(line)
-
-# for each vehicle, vehicle index, and then a list of calls that can be transported using that vehicle
-for _ in range(vehicles):
-    string_list = list(map(int, next(line).split(",")))
-    vehicles_dict[string_list[0]].valid_calls.extend(string_list[1:])
-
-next(line)
-
-# for each call: call index, origin node, destination node, size, cost of not transporting, lb tw pu, ub tw pu,
-# lb tw d, ub tw d
-calls_dict = {}
-for _ in range(calls):
-    string_list = list(map(int, next(line).split(",")))
-    calls_dict[string_list[0]] = Call(string_list[0], string_list[1], string_list[2], string_list[3], string_list[4],
-                                      string_list[5], string_list[6], string_list[7], string_list[8])
-
-next(line)
-
-# travel times and costs: vehicle, origin node, destination node, travel time (in hours), travel cost (in €)
-routes_dict = {}
-for _ in range(vehicles * nodes * nodes):
-    string_list = list(map(int, next(line).split(",")))
-    e1 = string_list.pop(0)
-    e2 = string_list.pop(0)
-    e3 = string_list.pop(0)
-    key = (e1, e2, e3)
-    routes_dict[key] = Travel(e1, e2, e3, string_list[0], string_list[1])
-
-next(line)
-
-# node times and costs: vehicle, call, origin node time (in hours), origin node costs (in €), destination node time
-# (in hours), destination node costs (in €)
-nodes_costs_dict = {}
-for _ in range(calls * vehicles):
-    string_list = list(map(int, next(line).split(",")))
-    e1 = string_list.pop(0)
-    e2 = string_list.pop(0)
-    key = (e1, e2)
-    nodes_costs_dict[key] = Node(e1, e2, string_list[0], string_list[1], string_list[2])
-
-
-def print_input():
-    print(nodes)
-    print(vehicles)
-    print(vehicles_dict)
-    print(calls)
-    print(calls_dict)
-    print(routes_dict)
-    print(nodes_costs_dict)
-
-
-def get_random_call():
-    call = calls_dict.get(random.randint(1, calls))
-    return call
+import file_handler as x
 
 
 # function for generating a random solution
 def random_solution():
     start = dt.datetime.now()
-
-    chosen_calls = {}
-    i = 0
-    k = 0
-    while (sum(len(item) for item in chosen_calls.values())) < calls:
-        j = i % vehicles + 1
-        vc = vehicles_dict.get(j).valid_calls
-        call = random.choice(vc)
-        vi = vehicles_dict.get(j).vehicle_index
-        i += 1
-
-        if vi not in chosen_calls:
-            chosen_calls[vi] = []
-        call_exists = False
-        for word_list in chosen_calls.values():
-            if call in word_list:
-                call_exists = True
-                break
-        if not call_exists:
-            chosen_calls[vi].append(call)
-            vehicles_dict.get(j).valid_calls.remove(call)
-            if (sum(len(item) for item in chosen_calls.values())) is calls:
-                # print("Size of chosen_calls: ", sum(len(item) for item in chosen_calls.values()))
-                break
-        k += 1
-
-    print("Size of chosen_calls: ", sum(len(item) for item in chosen_calls.values()))
-
-    for item, value in chosen_calls.items():
-        deliveries = list(value)
-        random.shuffle(deliveries)
-        for items in deliveries:
-            chosen_calls[item].append(items)
-        chosen_calls[item].append(0)
-
-    merged_routes = []
-    for value in chosen_calls.values():
-        merged_routes = merged_routes + value
-
-    print("Random solution: ", (' '.join(map(str, merged_routes))))
+    random_calls = []
+    for i in range(1, x.calls + 1):
+        random_calls.append(i)
+        random_calls.append(i)
+    for i in range(x.vehicles):
+        random_calls.append(0)
+    random.shuffle(random_calls)
     end = dt.datetime.now()
+    print("Random solution: ", (' '.join(map(str, random_calls))))
     total_time = (end - start).total_seconds()
     print("Completed in " + "%.6f" % total_time + " seconds.")
 
