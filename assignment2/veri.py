@@ -54,14 +54,14 @@ def check_solution(solution):
                 lb_tw_d = call.lb_tw_d
                 ub_tw_d = call.ub_tw_d
 
-                key = (current_vehicle_index, origin_node, dest_node)
-                route = x.travel_cost_dict.get(key)
+                route_key = (current_vehicle_index, origin_node, dest_node)
+                node_key = (current_vehicle_index, sol_call)
+                route = x.travel_cost_dict.get(route_key)
+                node_tc = x.nodes_costs_dict.get(node_key)
+                route_travel_time = route.travel_time
 
 
 
-                print("Call: %d, Vehicle: %d " % (sol_call, current_vehicle_index))
-                print("Key:", key)
-                print(route)
 
             else:
                 currently_transporting.remove(sol_call)

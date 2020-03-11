@@ -64,7 +64,8 @@ next(line)
 nodes_costs_dict = {}
 for _ in range(calls * vehicles):
     string_list = list(map(int, next(line).split(",")))
+    print(string_list)
     e1 = string_list.pop(0)
     e2 = string_list.pop(0)
     key = (e1, e2)
-    nodes_costs_dict[key] = NodeCost(e1, e2, string_list[0], string_list[1], string_list[2])
+    nodes_costs_dict[key] = NodeCost(e1, string_list[0], string_list[1], string_list[2], string_list[3])
