@@ -44,15 +44,27 @@ def check_solution(solution):
                 if currently_transporting_size > capacity:
                     return False
 
+                # check if pickup is in time window
+                starting_time = vehicle.starting_time
+                origin_node = call.origin_node
+                dest_node = call.destination_node
+
+                lb_tw_pu = call.lb_tw_pu
+                ub_tw_pu = call.ub_tw_pu
+                lb_tw_d = call.lb_tw_d
+                ub_tw_d = call.ub_tw_d
+
+                key = (current_vehicle_index, origin_node, dest_node)
+                route = x.travel_cost_dict.get(key)
+
+
+
+                print("Call: %d, Vehicle: %d " % (sol_call, current_vehicle_index))
+                print("Key:", key)
+                print(route)
+
             else:
                 currently_transporting.remove(sol_call)
                 currently_transporting_size -= call.size
-
-            # check if pickup is in time window
-            starting_time = vehicle.starting_time
-            origin_node = call.origin_node
-            dest_node = call.destination_node
-
-
 
     return True
