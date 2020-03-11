@@ -19,8 +19,8 @@ def valid_solution_test():
 
 def main():
     start = dt.datetime.now()
-    # valid_solution_test()
-    brute_force_random_generator()
+    valid_solution_test()
+    # brute_force_random_generator()
     end = dt.datetime.now()
     total_time = (end - start).total_seconds()
     print("Completed in " + "%.6f" % total_time + " seconds.")
