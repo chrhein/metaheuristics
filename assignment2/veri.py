@@ -12,7 +12,8 @@ def check_solution(solution):
     for vehicle in v:
         total_time = time_calc(current_vehicle_index, route_planner(solution).get(v.get(vehicle).vehicle_index), v, c)
         current_vehicle_index += 1
-        print(total_time)
+        if not total_time:
+            return False
 
     current_vehicle_index = 1
     for sol_call in solution:
@@ -56,7 +57,8 @@ def check_solution(solution):
 
 def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
     if not vehicle_route:
-        return 0
+        return True
+    print("Vehicle route from input:", vehicle_route)
     c = call_dict
     v = vehicle_dict.get(vehicle_index)
     t = x.travel_cost_dict
@@ -65,41 +67,75 @@ def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
     pus = []
 
     total_duration = v.starting_time
-    print("Starting time:", total_duration)
+    print("\nStarting time:", total_duration)
     origin_node = v.home_node
     print("Home node:", origin_node)
     dest_node = c.get(vehicle_route[0]).origin_node
+    pus.append(vehicle_route[0])
     print("First pu node:", dest_node)
     key = (vehicle_index, origin_node, dest_node)
     total_duration += t.get(key).travel_time
     print("Time used to travel between", origin_node, "and", dest_node, ":", t.get(key).travel_time)
 
-    for call in vehicle_route:
-        if vehicle_index == 0 or vehicle_index > x.vehicles:
-            print("Vehicle index out of bounds")
-            break
+    rt = calls_to_nodes(vehicle_route)
 
-        print("Handling call:", call)
-        origin_node = c.get(call).origin_node
-        print("Origin node:", origin_node)
-        dest_node = c.get(call).destination_node
-        print("Dest node:", dest_node)
+    call_index = 0
+
+    for call in vehicle_route:
 
         key = (vehicle_index, call)
+
         if call not in pus:
             pus.append(call)
+
+            lb_tw_pu = c.get(call).lb_tw_pu
+            ub_tw_pu = c.get(call).ub_tw_pu
+
+            if total_duration > ub_tw_pu:
+                return False
+
+            if lb_tw_pu > total_duration:
+                print("Came before pick up time, has to wait.", total_duration, "<", lb_tw_pu)
+                total_duration = lb_tw_pu
+
             total_duration += n.get(key).origin_node_time
             print("Time used during pick up:", n.get(key).origin_node_time)
+
+            print("Total time should be between:", lb_tw_pu, total_duration, ub_tw_pu)
             key = (vehicle_index, origin_node, dest_node)
             total_duration += t.get(key).travel_time
             print("Time used to travel between", origin_node, "and", dest_node, ":", t.get(key).travel_time)
         else:
+            lb_tw_d = c.get(call).lb_tw_d
+            ub_tw_d = c.get(call).ub_tw_d
+
+            if lb_tw_d > total_duration:
+                print("Came before delivery time, has to wait.", total_duration, "<", lb_tw_d)
+                total_duration = lb_tw_d
+
+            key = (vehicle_index, call)
             total_duration += n.get(key).dest_node_time
-            print("Time used during delivery:", n.get(key).dest_node_time)
 
-        print("End of handling this call")
+            if total_duration > ub_tw_d:
+                return False
 
-    return total_duration
+        print("End of handling this call \n")
+
+    return True
+
+
+def calls_to_nodes(vehicle_route):
+    pu = []
+    route_in_nodes = []
+    for call in vehicle_route:
+        o = x.calls_dict.get(call).origin_node
+        d = x.calls_dict.get(call).destination_node
+        if call not in pu:
+            pu.append(call)
+            route_in_nodes.append(o)
+        else:
+            route_in_nodes.append(d)
+    return route_in_nodes
 
 
 def route_planner(solution):
@@ -107,7 +143,8 @@ def route_planner(solution):
     v_index = 1
     v_route = []
     routes = {}
-    for _ in s:
+    size = len(s)
+    for _ in range(size):
         popped = s.pop(0)
         if popped == 0:
             routes[v_index] = v_route
@@ -115,5 +152,4 @@ def route_planner(solution):
             v_route = []
         else:
             v_route.append(popped)
-
     return routes
