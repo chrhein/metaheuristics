@@ -70,28 +70,39 @@ def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
     print("\nStarting time:", total_duration)
     origin_node = v.home_node
     print("Home node:", origin_node)
-    dest_node = c.get(vehicle_route[0]).origin_node
-    pus.append(vehicle_route[0])
-    print("First pu node:", dest_node)
-    key = (vehicle_index, origin_node, dest_node)
-    total_duration += t.get(key).travel_time
-    print("Time used to travel between", origin_node, "and", dest_node, ":", t.get(key).travel_time)
+    dest_node = 0
 
     rt = calls_to_nodes(vehicle_route)
 
     call_index = 0
 
-    for call in vehicle_route:
+    for i in range(len(rt) - 1):
+        node = rt[i]
+        call = vehicle_route[call_index]
+
+        if call_index == 0:
+            print("Origin:", origin_node)
+            dest_node = node
+            print("Dest:", dest_node)
+
+            key = (vehicle_index, origin_node, dest_node)
+            total_duration += t.get(key).travel_time
+
+        origin_node = dest_node
+        print("Origin:", origin_node)
+        dest_node = rt[i + 1]
+        print("Dest:", dest_node)
 
         key = (vehicle_index, call)
-
-        if call not in pus:
-            pus.append(call)
+        if node not in pus:
+            pus.append(node)
 
             lb_tw_pu = c.get(call).lb_tw_pu
             ub_tw_pu = c.get(call).ub_tw_pu
 
             if total_duration > ub_tw_pu:
+                print("Missed upper bound time window for pickup.")
+                print("Total duration was %d, while upper bound time window was %d" % (total_duration, ub_tw_pu))
                 return False
 
             if lb_tw_pu > total_duration:
@@ -113,13 +124,21 @@ def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
                 print("Came before delivery time, has to wait.", total_duration, "<", lb_tw_d)
                 total_duration = lb_tw_d
 
-            key = (vehicle_index, call)
             total_duration += n.get(key).dest_node_time
 
             if total_duration > ub_tw_d:
+                print("Missed upper bound time window for delivery.")
+                print("Total duration was %d, while upper bound time window was %d" % (total_duration, ub_tw_d))
                 return False
 
+            key = (vehicle_index, origin_node, dest_node)
+            print("Time used to travel between", origin_node, "and", dest_node, ":", t.get(key).travel_time)
+
         print("End of handling this call \n")
+
+        call_index += 1
+
+    print("Total duration for vehicle %d: %d" % (vehicle_index, total_duration))
 
     return True
 
