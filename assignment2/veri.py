@@ -12,6 +12,8 @@ def calls_to_nodes(vehicle_route):
             route_in_nodes.append(o)
         else:
             route_in_nodes.append(d)
+
+    route_in_nodes.append(-1)
     return route_in_nodes
 
 
@@ -48,10 +50,11 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
     dest_node = 0
 
     rt = calls_to_nodes(vehicle_route)
-    # print("Route for vehicle %d: %d" % (vehicle_index, origin_node), " ".join(str(i) for i in rt))
+    print("Route for vehicle %d: %d" % (vehicle_index, origin_node), " ".join(str(i) for i in rt))
     call_index = 0
 
     for i in range(len(rt) - 1):
+        print("i: %d, len(rt): %d, len(rt) - 1: %d" % (i, len(rt), len(rt)-1))
         node = rt[i]
         call = vehicle_route[call_index]
 
@@ -61,14 +64,16 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
             key = (vehicle_index, origin_node, dest_node)
             total_duration += t.get(key).travel_time
             total_cost += t.get(key).travel_cost
+            print("Added %d for travel cost between %d and %d." % (t.get(key).travel_cost, origin_node, dest_node))
 
         origin_node = dest_node
         dest_node = rt[i + 1]
 
         key = (vehicle_index, call)
+        print("Pick ups before pick up:", pus)
         if call not in pus:
             pus.append(call)
-
+            print("Pick ups after pick up:", pus)
             lb_tw_pu = c.get(call).lb_tw_pu
             ub_tw_pu = c.get(call).ub_tw_pu
 
@@ -82,10 +87,13 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
 
             total_duration += n.get(key).origin_node_time
             total_cost += n.get(key).origin_node_costs
+            print("Added %d for pick up costs at node %d." % (n.get(key).origin_node_costs, origin_node,))
 
             key = (vehicle_index, origin_node, dest_node)
             total_duration += t.get(key).travel_time
             total_cost += t.get(key).travel_cost
+            print("Added %d for travel cost between %d and %d." % (t.get(key).travel_cost, origin_node, dest_node))
+
         else:
             lb_tw_d = c.get(call).lb_tw_d
             ub_tw_d = c.get(call).ub_tw_d
@@ -93,8 +101,10 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
             if lb_tw_d > total_duration:
                 total_duration = lb_tw_d
 
+            print("Key:", key)
             total_duration += n.get(key).dest_node_time
             total_cost += n.get(key).dest_node_costs
+            print("Added %d for delivery costs at node %d." % (n.get(key).dest_node_costs, t.get()))
 
             if total_duration > ub_tw_d:
                 print("Missed upper bound time window for delivery.")
@@ -102,6 +112,7 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
                 return [False, 0]
 
         call_index += 1
+    print("Total cost for vehicle %d: %d" % (vehicle_index, total_cost))
     return [True, total_cost]
 
 
@@ -175,6 +186,7 @@ def check_solution(solution):
 
     for i in dummy_pus:
         dummy_cost_no_transport += c.get(i).cost_no_transport
+        print("Cost for no transport for call %d: %d" % (i, c.get(i).cost_no_transport))
 
     total_cost = freight_cost + dummy_cost_no_transport
 
