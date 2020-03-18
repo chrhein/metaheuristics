@@ -32,9 +32,9 @@ def route_planner(solution):
     return routes
 
 
-def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
+def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
     if not vehicle_route:
-        return True
+        return [True, 0]
     c = call_dict
     v = vehicle_dict.get(vehicle_index)
     t = x.travel_cost_dict
@@ -48,7 +48,7 @@ def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
     dest_node = 0
 
     rt = calls_to_nodes(vehicle_route)
-    print("Route for vehicle %d: %d" % (vehicle_index, origin_node), " ".join(str(i) for i in rt))
+    # print("Route for vehicle %d: %d" % (vehicle_index, origin_node), " ".join(str(i) for i in rt))
     call_index = 0
 
     for i in range(len(rt) - 1):
@@ -60,6 +60,7 @@ def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
 
             key = (vehicle_index, origin_node, dest_node)
             total_duration += t.get(key).travel_time
+            total_cost += t.get(key).travel_cost
 
         origin_node = dest_node
         dest_node = rt[i + 1]
@@ -74,7 +75,7 @@ def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
             if total_duration > ub_tw_pu:
                 print("Missed upper bound time window for pickup.")
                 print("Total duration was %d, while upper bound time window was %d" % (total_duration, ub_tw_pu))
-                return False
+                return [False, 0]
 
             if lb_tw_pu > total_duration:
                 total_duration = lb_tw_pu
@@ -98,10 +99,10 @@ def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
             if total_duration > ub_tw_d:
                 print("Missed upper bound time window for delivery.")
                 print("Total duration was %d, while upper bound time window was %d" % (total_duration, ub_tw_d))
-                return False
+                return [False, 0]
 
         call_index += 1
-    return True
+    return [True, total_cost]
 
 
 def check_solution(solution):
@@ -153,12 +154,30 @@ def check_solution(solution):
                 currently_transporting_size -= call.size
 
     current_vehicle_index = 1
-
+    freight_cost = 0
+    dummy_cost_no_transport = 0
     for vehicle in v:
-        total_time = time_calc(current_vehicle_index,
-                               route_planner(solution).get(v.get(vehicle).vehicle_index), v, c)
+        tcc = time_cost_calc(current_vehicle_index,
+                             route_planner(solution).get(v.get(vehicle).vehicle_index), v, c)
+        total_time = tcc[0]
+        freight_cost += tcc[1]
         current_vehicle_index += 1
         if not total_time:
             return False
+
+    dummy_calls = solution[::-1]
+    dummy_pus = []
+    for i in dummy_calls:
+        if i == 0:
+            break
+        if i not in dummy_pus:
+            dummy_pus.append(i)
+
+    for i in dummy_pus:
+        dummy_cost_no_transport += c.get(i).cost_no_transport
+
+    total_cost = freight_cost + dummy_cost_no_transport
+
+    print("Total cost:", total_cost)
 
     return True
