@@ -1,6 +1,5 @@
 import datetime as dt
 
-from brute_force import brute_force_random_generator
 from veri import check_solution
 
 
