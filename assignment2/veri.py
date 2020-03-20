@@ -36,6 +36,7 @@ def route_planner(solution):
 def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
     if not vehicle_route:
         return [True, 0]
+    print("\nBEGINNING OF ROUTE FOR VEHICLE %d\n" % vehicle_index)
     c = call_dict
     v = vehicle_dict.get(vehicle_index)
     t = x.travel_cost_dict
@@ -54,7 +55,7 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
     call_index = 0
 
     for i in range(len(vehicle_route)):
-        print("\nBEGINNING OF FOR LOOP\n")
+
         # print("i: %d, len(rt): %d, len(rt) - 1: %d" % (i, len(rt), len(rt)-1))
         call = vehicle_route[call_index]
 
@@ -103,11 +104,18 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
             # print("Added %d for travel cost between %d and %d." % (t.get(key).travel_cost, origin_node, dest_node))
 
         else:
+            calls_onboard.remove(call)
+            print("Removed %d from calls_onborad." % call)
             lb_tw_d = c.get(call).lb_tw_d
             ub_tw_d = c.get(call).ub_tw_d
 
             if lb_tw_d > local_time:
                 local_time = lb_tw_d
+
+            if local_time > ub_tw_d:
+                print("Missed upper bound time window for delivery.")
+                print("Time is %d, while upper bound time window was %d" % (local_time, ub_tw_d))
+                return [False, 0]
 
             local_time += n.get(key).dest_node_time
             # print("Time after delivery at node %d: %d" % ((c.get(call).destination_node)), local_time)
@@ -115,21 +123,16 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
             total_cost += n.get(key).dest_node_costs
             # print("Added %d for delivery costs at node %d." % (n.get(key).dest_node_costs, c.get(call).destination_node))
 
-            if dest_node != -1:
-                key = (vehicle_index, origin_node, dest_node)
-                total_cost += t.get(key).travel_cost
-                # print("Added %d for travel cost between %d and %d." % (t.get(key).travel_cost, origin_node, dest_node))
-            if local_time > ub_tw_d:
-                print("Missed upper bound time window for delivery.")
-                print("Time is %d, while upper bound time window was %d" % (local_time, ub_tw_d))
-                return [False, 0]
+
         try:
             key = (vehicle_index, origin_node, dest_node)
             local_time += t.get(key).travel_time
             print("Time after traveling between node %d and node %d: %d" % (origin_node, dest_node, local_time))
             total_cost += t.get(key).travel_cost
         except AttributeError as a:
-            print(a)
+            print("Dest_node is -1, and this leads to", a)
+            print("\nEND OF ROUTE FOR VEHICLE %d. \n" % vehicle_index)
+            break
         call_index += 1
     # print("Total cost for vehicle %d: %d" % (vehicle_index, total_cost))
     return [True, total_cost]
