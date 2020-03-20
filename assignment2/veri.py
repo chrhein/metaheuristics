@@ -13,7 +13,6 @@ def calls_to_nodes(vehicle_route):
         else:
             route_in_nodes.append(d)
 
-    route_in_nodes.append(-1)
     return route_in_nodes
 
 
@@ -53,7 +52,7 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
     # print("Route for vehicle %d: %d" % (vehicle_index, origin_node), " ".join(str(i) for i in rt))
     call_index = 0
 
-    for i in range(len(rt) - 1):
+    for i in range(len(rt)):
         # print("i: %d, len(rt): %d, len(rt) - 1: %d" % (i, len(rt), len(rt)-1))
         node = rt[i]
         call = vehicle_route[call_index]
@@ -67,7 +66,11 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
             # print("Added %d for travel cost between %d and %d." % (t.get(key).travel_cost, origin_node, dest_node))
 
         origin_node = dest_node
-        dest_node = rt[i + 1]
+        try:
+            dest_node = rt[i + 1]
+        except IndexError as e:
+            print("rt[i + 1]", e)
+            dest_node = -1
 
         key = (vehicle_index, call)
         if call not in pus and rt[i] != -1:
@@ -110,6 +113,7 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
         call_index += 1
     # print("Total cost for vehicle %d: %d" % (vehicle_index, total_cost))
     return [True, total_cost]
+
 
 
 def check_solution(solution):
