@@ -47,19 +47,18 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
     print("Starting time:", v.starting_time)
     total_cost = 0
     origin_node = v.home_node
-    dest_node = 0
-
     rt = calls_to_nodes(vehicle_route)
     print("Route for vehicle %d: %d" % (vehicle_index, origin_node), " ".join(str(i) for i in rt))
+    dest_node = rt.pop(0)
+    print("Solution:", vehicle_route)
     call_index = 0
 
-    for i in range(len(rt)):
+    for i in range(len(vehicle_route)):
+        print("\nBEGINNING OF FOR LOOP\n")
         # print("i: %d, len(rt): %d, len(rt) - 1: %d" % (i, len(rt), len(rt)-1))
-        node = rt[i]
         call = vehicle_route[call_index]
 
         if call_index == 0:
-            dest_node = node
 
             key = (vehicle_index, origin_node, dest_node)
             local_time += t.get(key).travel_time
@@ -69,7 +68,7 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
 
         origin_node = dest_node
         try:
-            dest_node = rt[i + 1]
+            dest_node = rt.pop(0)
         except IndexError as e:
             # print("rt[i + 1]", e)
             dest_node = -1
@@ -78,8 +77,11 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
         print("Origin:", origin_node)
         print("Dest:", dest_node)
         key = (vehicle_index, call)
+        print("Calls onboard:", calls_onboard, "\n")
+
         if call not in calls_onboard and dest_node != -1:
             calls_onboard.append(call)
+            print("Added call %d to calls_onboard." % call)
             print("Calls onboard:", calls_onboard, "\n")
             lb_tw_pu = c.get(call).lb_tw_pu
             ub_tw_pu = c.get(call).ub_tw_pu
@@ -98,10 +100,6 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
             total_cost += n.get(key).origin_node_costs
             # print("Added %d for pick up costs at node %d." % (n.get(key).origin_node_costs, origin_node,))
 
-            key = (vehicle_index, origin_node, dest_node)
-            local_time += t.get(key).travel_time
-            print("Time after traveling between node %d and node %d: %d" %(origin_node, dest_node, local_time))
-            total_cost += t.get(key).travel_cost
             # print("Added %d for travel cost between %d and %d." % (t.get(key).travel_cost, origin_node, dest_node))
 
         else:
@@ -112,7 +110,8 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
                 local_time = lb_tw_d
 
             local_time += n.get(key).dest_node_time
-            print("Time after delivery at node %d: %d" % (dest_node, local_time))
+            # print("Time after delivery at node %d: %d" % ((c.get(call).destination_node)), local_time)
+            print("Time after delivering at node %d: %d" % (c.get(call).destination_node, local_time))
             total_cost += n.get(key).dest_node_costs
             # print("Added %d for delivery costs at node %d." % (n.get(key).dest_node_costs, c.get(call).destination_node))
 
@@ -124,7 +123,13 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
                 print("Missed upper bound time window for delivery.")
                 print("Time is %d, while upper bound time window was %d" % (local_time, ub_tw_d))
                 return [False, 0]
-
+        try:
+            key = (vehicle_index, origin_node, dest_node)
+            local_time += t.get(key).travel_time
+            print("Time after traveling between node %d and node %d: %d" % (origin_node, dest_node, local_time))
+            total_cost += t.get(key).travel_cost
+        except AttributeError as a:
+            print(a)
         call_index += 1
     # print("Total cost for vehicle %d: %d" % (vehicle_index, total_cost))
     return [True, total_cost]
