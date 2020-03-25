@@ -1,145 +1,6 @@
 import file_handler as x
-
-
-def calls_to_nodes(vehicle_route):
-    pu = []
-    route_in_nodes = []
-    for call in vehicle_route:
-        o = x.calls_dict.get(call).origin_node
-        d = x.calls_dict.get(call).destination_node
-        if call not in pu:
-            pu.append(call)
-            route_in_nodes.append(o)
-        else:
-            route_in_nodes.append(d)
-
-    return route_in_nodes
-
-
-def route_planner(solution):
-    s = solution.copy()
-    v_index = 1
-    v_route = []
-    routes = {}
-    size = len(s)
-    for _ in range(size):
-        popped = s.pop(0)
-        if popped == 0:
-            routes[v_index] = v_route
-            v_index += 1
-            v_route = []
-        else:
-            v_route.append(popped)
-    return routes
-
-
-def cost_calc(solution):
-    current_vehicle_index = 0
-    total_cost = 0
-    c = x.calls_dict
-    t = x.travel_cost_dict
-    n = x.nodes_costs_dict
-    for vehicle in x.vehicles_dict:
-        current_vehicle_index += 1
-        vehicle_route = route_planner(solution).get(x.vehicles_dict.get(vehicle).vehicle_index)
-        if not vehicle_route:
-            continue
-        v = x.vehicles_dict.get(current_vehicle_index)
-        calls_onboard = []
-        origin_node = v.home_node
-        rt = calls_to_nodes(vehicle_route)
-        dest_node = rt.pop(0)
-        call_index = 0
-        for i in range(len(vehicle_route)):
-            call = vehicle_route[call_index]
-            if call_index == 0:
-                key = (current_vehicle_index, origin_node, dest_node)
-                total_cost += t.get(key).travel_cost
-            origin_node = dest_node
-            try:
-                dest_node = rt.pop(0)
-            except IndexError as e:
-                dest_node = -1
-            key = (current_vehicle_index, call)
-            if call not in calls_onboard and dest_node != -1:
-                calls_onboard.append(call)
-                total_cost += n.get(key).origin_node_costs
-            else:
-                calls_onboard.remove(call)
-                total_cost += n.get(key).dest_node_costs
-            try:
-                key = (current_vehicle_index, origin_node, dest_node)
-                total_cost += t.get(key).travel_cost
-            except AttributeError as a:
-                break
-            call_index += 1
-    dummy_cost_no_transport = 0
-    dummy_calls = solution[::-1]
-    dummy_pus = []
-    for i in dummy_calls:
-        if i == 0:
-            break
-        if i not in dummy_pus:
-            dummy_pus.append(i)
-    for i in dummy_pus:
-        dummy_cost_no_transport += c.get(i).cost_no_transport
-    total_cost += dummy_cost_no_transport
-    return total_cost
-
-
-def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
-    if not vehicle_route:
-        return True
-    c = call_dict
-    v = vehicle_dict.get(vehicle_index)
-    t = x.travel_cost_dict
-    n = x.nodes_costs_dict
-    calls_onboard = []
-    local_time = v.starting_time
-    origin_node = v.home_node
-    rt = calls_to_nodes(vehicle_route)
-    dest_node = rt.pop(0)
-    call_index = 0
-    for i in range(len(vehicle_route)):
-        call = vehicle_route[call_index]
-        if call_index == 0:
-            key = (vehicle_index, origin_node, dest_node)
-            local_time += t.get(key).travel_time
-        origin_node = dest_node
-        try:
-            dest_node = rt.pop(0)
-        except IndexError as e:
-            dest_node = -1
-        key = (vehicle_index, call)
-        if call not in calls_onboard and dest_node != -1:
-            calls_onboard.append(call)
-            lb_tw_pu = c.get(call).lb_tw_pu
-            ub_tw_pu = c.get(call).ub_tw_pu
-            if local_time > ub_tw_pu:
-                print("Missed upper bound time window for pickup.")
-                print("Time is now %d, while upper bound time window was %d." % (local_time, ub_tw_pu))
-                return False
-            if lb_tw_pu > local_time:
-                local_time = lb_tw_pu
-            local_time += n.get(key).origin_node_time
-        else:
-            calls_onboard.remove(call)
-            lb_tw_d = c.get(call).lb_tw_d
-            ub_tw_d = c.get(call).ub_tw_d
-            if lb_tw_d > local_time:
-                local_time = lb_tw_d
-            if local_time > ub_tw_d:
-                print("Missed upper bound time window for delivery.")
-                print("Time is now %d, while upper bound time window was %d." % (local_time, ub_tw_d))
-                return False
-            local_time += n.get(key).dest_node_time
-        try:
-            key = (vehicle_index, origin_node, dest_node)
-            local_time += t.get(key).travel_time
-        except AttributeError as a:
-            break
-        call_index += 1
-    return True
+from route_handler import route_planner
+from time_calculation import time_calc
 
 
 def check_solution(solution):
@@ -183,8 +44,8 @@ def check_solution(solution):
                 currently_transporting_size -= call.size
     current_vehicle_index = 1
     for vehicle in v:
-        total_time = time_cost_calc(current_vehicle_index,
-                                    route_planner(solution).get(v.get(vehicle).vehicle_index), v, c)
+        total_time = time_calc(current_vehicle_index,
+                               route_planner(solution).get(v.get(vehicle).vehicle_index), v, c)
         current_vehicle_index += 1
         if not total_time:
             return False

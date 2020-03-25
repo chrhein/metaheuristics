@@ -1,7 +1,8 @@
 import datetime as dt
 
 from search_algorithms.random_search import random_search
-from veri import check_solution, cost_calc
+from veri import check_solution
+from cost_calculation import cost_calc
 
 
 def random_search_test():
