@@ -1,5 +1,7 @@
 import file_handler as x
 
+total_cost_for_solution = 0
+
 
 def calls_to_nodes(vehicle_route):
     pu = []
@@ -128,8 +130,8 @@ def time_cost_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
             # print("Time after traveling between node %d and node %d: %d" % (origin_node, dest_node, local_time))
             total_cost += t.get(key).travel_cost
         except AttributeError as a:
-            #print("Dest_node is -1, and this leads to", a)
-            #print("\nEND OF ROUTE FOR VEHICLE %d. \n" % vehicle_index)
+            # print("Dest_node is -1, and this leads to", a)
+            # print("\nEND OF ROUTE FOR VEHICLE %d. \n" % vehicle_index)
             break
         call_index += 1
     # print("Total cost for vehicle %d: %d" % (vehicle_index, total_cost))
@@ -206,10 +208,16 @@ def check_solution(solution):
 
     for i in dummy_pus:
         dummy_cost_no_transport += c.get(i).cost_no_transport
-        # print("Cost for no transport for call %d: %d" % (i, c.get(i).cost_no_transport))
 
     total_cost = freight_cost + dummy_cost_no_transport
+
+    global total_cost_for_solution
+    total_cost_for_solution = total_cost
 
     print("Total cost:", total_cost)
 
     return True
+
+
+def get_total_cost():
+    return total_cost_for_solution

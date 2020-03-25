@@ -1,6 +1,14 @@
 import datetime as dt
 
+from search_algorithms.random_search import random_search
 from veri import check_solution
+
+
+def random_search_test():
+    init_solution = [3, 3, 0, 7, 1, 7, 1, 0, 5, 5, 0, 2, 2, 4, 4, 6, 6]
+    best_solution = random_search(init_solution)
+    print("Initial solution:", init_solution)
+    print("Best solution:", best_solution)
 
 
 def valid_solution_test():
@@ -25,7 +33,8 @@ def valid_solution_test():
 
 def main():
     start = dt.datetime.now()
-    valid_solution_test()
+    random_search_test()
+    # valid_solution_test()
     # brute_force_random_generator()
     end = dt.datetime.now()
     total_time = (end - start).total_seconds()
