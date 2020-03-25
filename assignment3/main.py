@@ -1,15 +1,28 @@
 import datetime as dt
 
+import file_handler as x
+from cost_calculation import cost_calc, f
 from search_algorithms.random_search import random_search
 from veri import check_solution
-from cost_calculation import cost_calc
 
 
-def random_search_test():
-    init_solution = [0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7]
+def random_solution_initializer():
+    init_solution = []
+    for _ in range(x.vehicles):
+        init_solution.append(0)
+    for i in range(x.calls):
+        init_solution.append(i + 1)
+        init_solution.append(i + 1)
+
+    print("\nInitial solution:", init_solution)
+    print("Cost of initial solution:", f(init_solution))
+    start = dt.datetime.now()
     best_solution = random_search(init_solution)
-    # print("Initial solution:", init_solution)
-    # print("Best solution:", best_solution)
+    end = dt.datetime.now()
+    total_time = (end - start).total_seconds()
+    print("Best random solution:", best_solution)
+    print("Cost of best random solution:", f(best_solution), "\n")
+    print("Completed in " + "%.6f" % total_time + " seconds.")
 
 
 def valid_solution_test():
@@ -34,13 +47,10 @@ def valid_solution_test():
 
 
 def main():
-    start = dt.datetime.now()
     # random_search_test()
-    valid_solution_test()
+    # valid_solution_test()
     # brute_force_random_generator()
-    end = dt.datetime.now()
-    total_time = (end - start).total_seconds()
-    print("Completed in " + "%.6f" % total_time + " seconds.")
+    random_solution_initializer()
 
 
 main()

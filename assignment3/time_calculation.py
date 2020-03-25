@@ -31,8 +31,8 @@ def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
             lb_tw_pu = c.get(call).lb_tw_pu
             ub_tw_pu = c.get(call).ub_tw_pu
             if local_time > ub_tw_pu:
-                print("Missed upper bound time window for pickup.")
-                print("Time is now %d, while upper bound time window was %d." % (local_time, ub_tw_pu))
+                # print("Missed upper bound time window for pickup.")
+                # print("Time is now %d, while upper bound time window was %d." % (local_time, ub_tw_pu))
                 return False
             if lb_tw_pu > local_time:
                 local_time = lb_tw_pu
@@ -44,8 +44,8 @@ def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):
             if lb_tw_d > local_time:
                 local_time = lb_tw_d
             if local_time > ub_tw_d:
-                print("Missed upper bound time window for delivery.")
-                print("Time is now %d, while upper bound time window was %d." % (local_time, ub_tw_d))
+                # print("Missed upper bound time window for delivery.")
+                # print("Time is now %d, while upper bound time window was %d." % (local_time, ub_tw_d))
                 return False
             local_time += n.get(key).dest_node_time
         try:
