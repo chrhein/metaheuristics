@@ -1,7 +1,7 @@
-from veri import check_solution, get_total_cost
+from veri import check_solution
 
 
 def evaluate(solution):
-    check_solution(solution)
-    tc = get_total_cost()
+    cs = check_solution(solution)
+    tc = cs[1]
     return tc
