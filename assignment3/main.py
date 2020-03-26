@@ -2,7 +2,7 @@ import datetime as dt
 
 import file_handler as x
 from cost_calculation import cost_calc, f
-from search_algorithms.local_search import local_search, two_exchange
+from search_algorithms.local_search import local_search
 from search_algorithms.random_search import random_search
 from veri import check_solution
 
@@ -18,31 +18,69 @@ def solution_generator():
 
 
 def local_search_initializer():
+    print("--- Running Local Search Algorithm ---")
+
     init_solution = solution_generator()
+    cost_init = f(init_solution)
 
     print("\nInitial solution:", init_solution)
-    print("Cost of initial solution:", f(init_solution))
+    print("Cost of initial solution:", cost_init)
     start = dt.datetime.now()
-    best_solution = local_search(init_solution)
+    times = 10
+    total_cost = 0
+    best_objective = cost_init
+    for _ in range(times):
+        best_solution = local_search(init_solution)
+        cost = f(best_solution)
+        if cost < best_objective:
+            best_objective = cost
+        total_cost += cost
     end = dt.datetime.now()
     total_time = (end - start).total_seconds()
-    print("Best local search solution:", best_solution)
-    print("Cost of best random solution:", f(best_solution), "\n")
-    print("Completed in " + "%.6f" % total_time + " seconds.")
+
+    avg_cost = (total_cost / 10)
+    improvement = 100 * (cost_init - best_objective) / cost_init
+
+    print("Average cost: %.2d" % round(avg_cost, 0))
+    print("Best objective: %.2d" % round(best_objective, 0))
+    print("Improvement: %.2f" % round(improvement, 2))
+
+    print("Completed in " + "%.6f" % total_time + " seconds. \n")
+
+    print("--- End of Local Search Algorithm ---")
 
 
 def random_solution_initializer():
+    print("--- Running Random Search Algorithm ---")
+
     init_solution = solution_generator()
+    cost_init = f(init_solution)
 
     print("\nInitial solution:", init_solution)
-    print("Cost of initial solution:", f(init_solution))
+    print("Cost of initial solution:", cost_init)
     start = dt.datetime.now()
-    best_solution = random_search(init_solution)
+    times = 10
+    total_cost = 0
+    best_objective = cost_init
+    for _ in range(times):
+        best_solution = random_search(init_solution)
+        cost = f(best_solution)
+        if cost < best_objective:
+            best_objective = cost
+        total_cost += cost
     end = dt.datetime.now()
     total_time = (end - start).total_seconds()
-    print("Best random solution:", best_solution)
-    print("Cost of best random solution:", f(best_solution), "\n")
-    print("Completed in " + "%.6f" % total_time + " seconds.")
+
+    avg_cost = (total_cost / 10)
+    improvement = 100 * (cost_init - best_objective) / cost_init
+
+    print("Average cost: %.2d" % round(avg_cost, 0))
+    print("Best objective: %.2d" % round(best_objective, 0))
+    print("Improvement: %.2f" % round(improvement, 2))
+
+    print("Completed in " + "%.6f" % total_time + " seconds. \n")
+
+    print("--- End of Random Search Algorithm ---")
 
 
 def valid_solution_test():
@@ -70,8 +108,8 @@ def main():
     # random_search_test()
     # valid_solution_test()
     # brute_force_random_generator()
-    # random_solution_initializer()
-    local_search_initializer()
+    random_solution_initializer()
+    # local_search_initializer()
     # print("[3, 3, 0, 0, 7, 7, 1, 1, 0, 5, 4, 6, 2, 5, 6, 4, 2]")
     # print(two_exchange([3, 3, 0, 0, 7, 7, 1, 1, 0, 5, 4, 6, 2, 5, 6, 4, 2]))
 
