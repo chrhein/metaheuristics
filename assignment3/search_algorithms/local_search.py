@@ -7,8 +7,7 @@ from veri import check_solution
 
 def local_search(init_solution):
     best_solution = init_solution
-    p1 = 0.33
-    p2 = 0.33
+    p1, p2 = 0.33, 0.33
     for i in range(1, 10000):
         rand = random.uniform(0, 1)
         if rand < p1:
