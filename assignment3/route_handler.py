@@ -31,3 +31,33 @@ def route_planner(solution):
         else:
             v_route.append(popped)
     return routes
+
+
+def get_calls(solution):
+    calls = {}
+    vehicle_calls = []
+    vehicle_index = 1
+    for call in solution:
+        if call == 0:
+            vehicle_calls.append(call)
+            calls[vehicle_index] = vehicle_calls
+            vehicle_index += 1
+            vehicle_calls = []
+        else:
+            vehicle_calls.append(call)
+    calls[vehicle_index] = vehicle_calls
+    return calls
+
+
+def get_index_positions(list_of_elements, element):
+    index_pos_list = []
+    index_pos = 0
+    while True:
+        try:
+            index_pos = list_of_elements.index(element, index_pos)
+            index_pos_list.append(index_pos)
+            index_pos += 1
+        except ValueError as e:
+            break
+
+    return index_pos_list
