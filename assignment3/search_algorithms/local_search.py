@@ -11,6 +11,7 @@ def get_calls(solution):
     vehicle_index = 1
     for call in solution:
         if call == 0:
+            vehicle_calls.append(call)
             calls[vehicle_index] = vehicle_calls
             vehicle_index += 1
             vehicle_calls = []
@@ -25,7 +26,7 @@ def two_exchange(solution):
     rand_ub = x.vehicles + 2
     rand = random.randrange(1, rand_ub)
     two_exchange_list = calls.get(rand)
-    if not two_exchange_list or len(two_exchange_list) == 2:
+    if len(two_exchange_list) == 1 or len(two_exchange_list) == 3:
         return solution
     else:
         rand1 = random.choice(two_exchange_list)
@@ -42,10 +43,7 @@ def two_exchange(solution):
         calls[rand] = two_exchange_list
         new_solution = []
         for val in calls.values():
-            if not val:
-                new_solution.append(0)
-            else:
-                for call in val:
+            for call in val:
                     new_solution.append(call)
     return new_solution
 
@@ -87,7 +85,7 @@ def local_search(init_solution):
     p1 = 0.33
     p2 = 0.33
     p3 = (1 - p1 - p2)
-    for _ in range(1, 10000):
+    for _ in range(1, 10):
         rand = random.uniform(0, 1)
         if rand < p1:
             current = two_exchange(best_solution)

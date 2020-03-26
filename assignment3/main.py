@@ -2,7 +2,7 @@ import datetime as dt
 
 import file_handler as x
 from cost_calculation import cost_calc, f
-from search_algorithms.local_search import local_search
+from search_algorithms.local_search import local_search, two_exchange
 from search_algorithms.random_search import random_search
 from veri import check_solution
 
@@ -72,6 +72,8 @@ def main():
     # brute_force_random_generator()
     # random_solution_initializer()
     local_search_initializer()
+    # print("[3, 3, 0, 0, 7, 7, 1, 1, 0, 5, 4, 6, 2, 5, 6, 4, 2]")
+    # print(two_exchange([3, 3, 0, 0, 7, 7, 1, 1, 0, 5, 4, 6, 2, 5, 6, 4, 2]))
 
 
 main()
