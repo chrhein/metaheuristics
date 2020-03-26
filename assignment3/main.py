@@ -2,17 +2,37 @@ import datetime as dt
 
 import file_handler as x
 from cost_calculation import cost_calc, f
+from search_algorithms.local_search import local_search
 from search_algorithms.random_search import random_search
 from veri import check_solution
 
 
-def random_solution_initializer():
+def solution_generator():
     init_solution = []
     for _ in range(x.vehicles):
         init_solution.append(0)
     for i in range(x.calls):
         init_solution.append(i + 1)
         init_solution.append(i + 1)
+    return init_solution
+
+
+def local_search_initializer():
+    init_solution = solution_generator()
+
+    print("\nInitial solution:", init_solution)
+    print("Cost of initial solution:", f(init_solution))
+    start = dt.datetime.now()
+    best_solution = local_search(init_solution)
+    end = dt.datetime.now()
+    total_time = (end - start).total_seconds()
+    print("Best local search solution:", best_solution)
+    print("Cost of best random solution:", f(best_solution), "\n")
+    print("Completed in " + "%.6f" % total_time + " seconds.")
+
+
+def random_solution_initializer():
+    init_solution = solution_generator()
 
     print("\nInitial solution:", init_solution)
     print("Cost of initial solution:", f(init_solution))
@@ -50,7 +70,8 @@ def main():
     # random_search_test()
     # valid_solution_test()
     # brute_force_random_generator()
-    random_solution_initializer()
+    # random_solution_initializer()
+    local_search_initializer()
 
 
 main()
