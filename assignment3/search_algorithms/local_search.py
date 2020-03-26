@@ -26,7 +26,7 @@ def two_exchange(solution):
     rand_ub = x.vehicles + 2
     rand = random.randrange(1, rand_ub)
     two_exchange_list = calls.get(rand)
-    if len(two_exchange_list) == 1 or len(two_exchange_list) == 3:
+    if len(two_exchange_list) <= 3:
         return solution
     else:
         rand1 = random.choice(two_exchange_list)
@@ -44,35 +44,46 @@ def two_exchange(solution):
         new_solution = []
         for val in calls.values():
             for call in val:
-                    new_solution.append(call)
+                new_solution.append(call)
+    print("2-exchange:", new_solution)
     return new_solution
 
 
 def three_exchange(solution):
-    old_sol = solution.copy()
-    new_sol = old_sol.copy()
+    calls = get_calls(solution)
+    rand_ub = x.vehicles + 2
+    rand = random.randrange(1, rand_ub)
+    three_exchange_list = calls.get(rand)
+    if len(three_exchange_list) <= 6:
+        return solution
+    else:
+        rand1 = random.choice(three_exchange_list)
+        rand2 = random.choice(three_exchange_list)
+        rand3 = random.choice(three_exchange_list)
 
-    c = x.calls
-    rand1 = random.randrange(1, c)
-    rand2 = random.randrange(1, c)
-    rand3 = random.randrange(1, c)
-    while rand2 == rand1 == rand3:
-        if rand1 == rand2:
-            rand2 = random.randrange(1, c)
-        elif rand2 == rand3:
-            rand3 = random.randrange(1, c)
-        else:
-            rand1 = random.randrange(1, c)
+        while rand1 == rand2 or rand2 == rand3 or rand3 == rand1:
+            rand2 = random.choice(three_exchange_list)
+            rand3 = random.choice(three_exchange_list)
 
-    index_rand1 = old_sol.index(rand1)
-    index_rand2 = old_sol.index(rand2)
-    index_rand3 = old_sol.index(rand3)
+        rand1_indexes = get_index_positions(three_exchange_list, rand1)
+        rand2_indexes = get_index_positions(three_exchange_list, rand2)
+        rand3_indexes = get_index_positions(three_exchange_list, rand3)
 
-    new_sol[index_rand1] = old_sol[index_rand2]
-    new_sol[index_rand2] = old_sol[index_rand3]
-    new_sol[index_rand3] = old_sol[index_rand1]
+        three_exchange_list[rand1_indexes[0]], three_exchange_list[rand2_indexes[0]], three_exchange_list[
+            rand3_indexes[0]] = three_exchange_list[rand2_indexes[0]], three_exchange_list[rand3_indexes[0]], \
+            three_exchange_list[rand1_indexes[0]]
 
-    return new_sol
+        three_exchange_list[rand1_indexes[1]], three_exchange_list[rand2_indexes[1]], three_exchange_list[
+            rand3_indexes[1]] = three_exchange_list[rand2_indexes[1]], three_exchange_list[rand3_indexes[1]], \
+            three_exchange_list[rand1_indexes[1]]
+
+        calls[rand] = three_exchange_list
+        new_solution = []
+        for val in calls.values():
+            for call in val:
+                new_solution.append(call)
+    print("3-exchange:", new_solution)
+    return new_solution
 
 
 def one_reinsert(solution):
@@ -85,7 +96,7 @@ def local_search(init_solution):
     p1 = 0.33
     p2 = 0.33
     p3 = (1 - p1 - p2)
-    for _ in range(1, 10):
+    for _ in range(1, 10000):
         rand = random.uniform(0, 1)
         if rand < p1:
             current = two_exchange(best_solution)
