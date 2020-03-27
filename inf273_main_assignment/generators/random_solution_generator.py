@@ -1,6 +1,6 @@
 import random
 
-import file_handler as x
+from setup import file_handler as x
 
 
 def random_solution():

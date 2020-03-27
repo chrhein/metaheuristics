@@ -1,7 +1,7 @@
 import random
 
-import file_handler as x
-from route_handler import get_calls, get_index_positions
+from setup import file_handler as x
+from tools.route_handler import get_calls, get_index_positions
 
 
 def one_reinsert(solution):

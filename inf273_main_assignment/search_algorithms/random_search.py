@@ -1,6 +1,6 @@
-from random_solution_generator import random_solution
-from cost_calculation import f
-from veri import check_solution
+from generators.random_solution_generator import random_solution
+from feasibility_checking.cost_calculation import f
+from feasibility_checking.feasibility_check import check_solution
 
 
 def random_search(init_solution):

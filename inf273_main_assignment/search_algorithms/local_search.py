@@ -1,8 +1,8 @@
 import random
 
-from cost_calculation import f
+from feasibility_checking.cost_calculation import f
 from operators.basic_operators import two_exchange, three_exchange, one_reinsert
-from veri import check_solution
+from feasibility_checking.feasibility_check import check_solution
 
 
 def local_search(init_solution):

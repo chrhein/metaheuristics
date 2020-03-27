@@ -1,5 +1,5 @@
-from random_solution_generator import random_solution
-from veri import check_solution
+from generators.random_solution_generator import random_solution
+from feasibility_checking.feasibility_check import check_solution
 
 
 def no_zeroes(sol):

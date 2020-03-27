@@ -1,6 +1,6 @@
-import file_handler as x
-from route_handler import route_planner
-from time_calculation import time_calc
+from setup import file_handler as x
+from tools.route_handler import route_planner
+from feasibility_checking.time_calculation import time_calc
 
 
 def check_solution(solution):

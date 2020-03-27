@@ -1,5 +1,5 @@
-import file_handler as x
-from route_handler import calls_to_nodes
+from setup import file_handler as x
+from tools.route_handler import calls_to_nodes
 
 
 def time_calc(vehicle_index, vehicle_route, vehicle_dict, call_dict):

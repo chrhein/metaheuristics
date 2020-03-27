@@ -1,7 +1,7 @@
 import datetime as dt
 
-from cost_calculation import f
-from initializers.solution_generator import solution_generator
+from feasibility_checking.cost_calculation import f
+from generators.solution_generator import solution_generator
 from search_algorithms.local_search import local_search
 
 

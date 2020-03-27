@@ -1,6 +1,6 @@
-import file_handler as x
-from veri import check_solution
-from cost_calculation import cost_calc
+from setup import file_handler as x
+from feasibility_checking.feasibility_check import check_solution
+from feasibility_checking.cost_calculation import cost_calc
 
 
 def solution_generator():
