@@ -4,6 +4,7 @@ import random
 from feasibility_checking.cost_calculation import f
 from operators.basic_operators import two_exchange, three_exchange, one_reinsert
 from feasibility_checking.feasibility_check import check_solution
+from operators.own_operator_1 import one_insert_most_expensive_call
 
 
 def simulated_annealing_new(init_solution):
@@ -12,11 +13,12 @@ def simulated_annealing_new(init_solution):
     t0 = 100
     t = t0
     a = 0.998
-    p1, p2 = 0.33, 0.33
-    for i in range(1, 10000):
+    p1 = 1
+    p2 = 0
+    for i in range(1, 10):
         rand = random.uniform(0, 1)
         if rand < p1:
-            new_solution = two_exchange(incumbent)
+            new_solution = one_insert_most_expensive_call(incumbent)
         elif rand < p1 + p2:
             new_solution = three_exchange(incumbent)
         else:

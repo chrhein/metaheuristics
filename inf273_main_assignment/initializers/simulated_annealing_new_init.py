@@ -6,7 +6,7 @@ from search_algorithms.simulated_annealing_new import simulated_annealing_new
 
 
 def simulated_annealing_initializer(init_solution, times):
-    print("--- Running Simulated Annealing Algorithm ---")
+    print("--- Running New Simulated Annealing Algorithm ---")
 
     cost_init = f(init_solution)
 
@@ -44,4 +44,4 @@ def simulated_annealing_initializer(init_solution, times):
 
     print("\nCompleted in " + "%.6f" % total_runtime + " seconds. \n")
 
-    print("--- End of Simulated Annealing Algorithm ---")
+    print("--- End of New Simulated Annealing Algorithm ---")
