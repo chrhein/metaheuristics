@@ -1,6 +1,7 @@
 import random
 
 from setup import file_handler as x
+from tools.calls_dict_to_solution import calls_to_solution
 from tools.route_handler import get_calls_including_zeroes, get_index_positions
 
 
@@ -25,11 +26,7 @@ def one_reinsert(solution):
     else:
         calls[rand_ub - 1].insert(0, rand1)
         calls[rand_ub - 1].insert(0, rand1)
-    new_solution = []
-    for val in calls.values():
-        for call in val:
-            new_solution.append(call)
-    return new_solution
+    return calls_to_solution(calls)
 
 
 def two_exchange(solution):
@@ -52,11 +49,7 @@ def two_exchange(solution):
         two_exchange_list[rand1_indexes[1]], two_exchange_list[rand2_indexes[1]] = \
             two_exchange_list[rand2_indexes[1]], two_exchange_list[rand1_indexes[1]]
         calls[rand] = two_exchange_list
-        new_solution = []
-        for val in calls.values():
-            for call in val:
-                new_solution.append(call)
-    return new_solution
+    return calls_to_solution(calls)
 
 
 def three_exchange(solution):
@@ -86,8 +79,4 @@ def three_exchange(solution):
                                 three_exchange_list[rand1_indexes[1]]
 
         calls[rand] = three_exchange_list
-        new_solution = []
-        for val in calls.values():
-            for call in val:
-                new_solution.append(call)
-    return new_solution
+    return calls_to_solution(calls)

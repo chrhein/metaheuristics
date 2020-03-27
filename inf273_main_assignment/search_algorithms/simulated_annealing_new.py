@@ -10,12 +10,12 @@ from operators.own_operator_1 import one_insert_most_expensive_call
 def simulated_annealing_new(init_solution):
     best_solution = init_solution
     incumbent = init_solution
-    t0 = 100
+    t0 = 1000
     t = t0
     a = 0.998
-    p1 = 1
-    p2 = 0
-    for i in range(1, 10):
+    p1 = 0.5
+    p2 = 0.25
+    for i in range(1, 10000):
         rand = random.uniform(0, 1)
         if rand < p1:
             new_solution = one_insert_most_expensive_call(incumbent)

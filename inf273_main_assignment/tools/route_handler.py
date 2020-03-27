@@ -66,5 +66,5 @@ def get_most_expensive_calls(solution):
     for call in solution:
         if call != 0:
             calls[call] = x.calls_dict.get(call).cost_no_transport
-    # sorted_calls_by_value = {k: v for k, v in sorted(calls.items(), key=lambda item: item[1], reverse=True)}
-    return calls
+    sorted_calls_by_value = {k: v for k, v in sorted(calls.items(), key=lambda item: item[1], reverse=True)}
+    return sorted_calls_by_value
