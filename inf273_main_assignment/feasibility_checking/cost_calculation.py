@@ -1,7 +1,7 @@
 import sys
 
 from tools import route_handler as rh
-from setup import file_handler as x
+from setup import file_to_dataclass as x
 
 
 def cost_calc(solution):
@@ -11,9 +11,10 @@ def cost_calc(solution):
         c = x.calls_dict
         t = x.travel_cost_dict
         n = x.nodes_costs_dict
+        route = rh.route_planner(solution)
         for vehicle in x.vehicles_dict:
             current_vehicle_index += 1
-            vehicle_route = rh.route_planner(solution).get(x.vehicles_dict.get(vehicle).vehicle_index)
+            vehicle_route = route.get(x.vehicles_dict.get(vehicle).vehicle_index)
             if not vehicle_route:
                 continue
             v = x.vehicles_dict.get(current_vehicle_index)

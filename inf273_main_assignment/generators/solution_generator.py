@@ -1,4 +1,4 @@
-from setup import file_handler as x
+from setup import file_to_dataclass as x
 from feasibility_checking.feasibility_check import check_solution
 from feasibility_checking.cost_calculation import cost_calc
 

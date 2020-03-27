@@ -1,11 +1,11 @@
 import random
 
-from setup import file_handler as x
-from tools.route_handler import get_calls, get_index_positions
+from setup import file_to_dataclass as x
+from tools.route_handler import get_calls_including_zeroes, get_index_positions
 
 
 def one_reinsert(solution):
-    calls = get_calls(solution)
+    calls = get_calls_including_zeroes(solution)
     rand_ub = x.vehicles + 2
     rand = random.randrange(1, rand_ub)
     one_reinsert_list = calls.get(rand)
@@ -33,7 +33,7 @@ def one_reinsert(solution):
 
 
 def two_exchange(solution):
-    calls = get_calls(solution)
+    calls = get_calls_including_zeroes(solution)
     rand_ub = x.vehicles + 2
     rand = random.randrange(1, rand_ub)
     two_exchange_list = calls.get(rand)
@@ -61,7 +61,7 @@ def two_exchange(solution):
 
 
 def three_exchange(solution):
-    calls = get_calls(solution)
+    calls = get_calls_including_zeroes(solution)
     rand_ub = x.vehicles + 2
     rand = random.randrange(1, rand_ub)
     three_exchange_list = calls.get(rand)

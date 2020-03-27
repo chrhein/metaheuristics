@@ -1,6 +1,8 @@
-from setup.data_classes import *
+from setup.dataclasses import *
 
-with open("assets/Call_7_Vehicle_3.txt", "r") as f:
+filename = "assets/Call_7_Vehicle_3.txt"
+
+with open(filename, "r") as f:
     file = f.readlines()
 
 line = iter(file)
@@ -42,7 +44,8 @@ next(line)
 calls_dict = {}
 for _ in range(calls):
     string_list = list(map(int, next(line).split(",")))
-    calls_dict[string_list[0]] = Call(string_list[0], string_list[1], string_list[2], string_list[3], string_list[4],
+    calls_dict[string_list[0]] = Call(string_list[0], string_list[1], string_list[2], string_list[3],
+                                      string_list[4],
                                       string_list[5], string_list[6], string_list[7], string_list[8])
 
 next(line)

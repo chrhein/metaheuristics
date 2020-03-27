@@ -1,4 +1,4 @@
-from setup import file_handler as x
+from setup import file_to_dataclass as x
 
 
 def calls_to_nodes(vehicle_route):
@@ -17,13 +17,11 @@ def calls_to_nodes(vehicle_route):
 
 
 def route_planner(solution):
-    s = solution.copy()
     v_index = 1
     v_route = []
     routes = {}
-    size = len(s)
-    for _ in range(size):
-        popped = s.pop(0)
+    for i in range(len(solution)):
+        popped = solution[i]
         if popped == 0:
             routes[v_index] = v_route
             v_index += 1
@@ -33,7 +31,7 @@ def route_planner(solution):
     return routes
 
 
-def get_calls(solution):
+def get_calls_including_zeroes(solution):
     calls = {}
     vehicle_calls = []
     vehicle_index = 1

@@ -1,4 +1,4 @@
-from setup import file_handler as x
+from setup import file_to_dataclass as x
 from tools.route_handler import route_planner
 from feasibility_checking.time_calculation import time_calc
 
@@ -11,6 +11,7 @@ def check_solution(solution):
     currently_transporting_size = 0
     pickups = []
     currently_transporting = []
+    route = route_planner(solution)
     for sol_call in solution:
         # zeroes marks switch of vehicles
         if sol_call == 0:
@@ -45,7 +46,7 @@ def check_solution(solution):
     current_vehicle_index = 1
     for vehicle in v:
         total_time = time_calc(current_vehicle_index,
-                               route_planner(solution).get(v.get(vehicle).vehicle_index), v, c)
+                               route.get(v.get(vehicle).vehicle_index), v, c)
         current_vehicle_index += 1
         if not total_time:
             return False
