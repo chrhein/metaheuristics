@@ -1,4 +1,4 @@
-from setup import file_to_dataclass as x
+from setup import file_handler as x
 
 
 def print_input():

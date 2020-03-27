@@ -2,11 +2,12 @@ import datetime as dt
 import sys
 
 from feasibility_checking.cost_calculation import f
-from search_algorithms.local_search import local_search
+from search_algorithms.simulated_annealing_new import simulated_annealing_new
 
 
-def local_search_initializer(init_solution, times):
-    print("--- Running Local Search Algorithm ---")
+def simulated_annealing_initializer(init_solution, times):
+    print("--- Running Simulated Annealing Algorithm ---")
+
     cost_init = f(init_solution)
 
     print("\nInitial solution:", init_solution)
@@ -18,7 +19,7 @@ def local_search_initializer(init_solution, times):
     best_runtime = sys.maxsize
     for _ in range(times):
         iter_start_time = dt.datetime.now()
-        new_solution = local_search(init_solution)
+        new_solution = simulated_annealing_new(init_solution)
         cost = f(new_solution)
         if cost < best_objective:
             best_objective = cost
@@ -31,6 +32,7 @@ def local_search_initializer(init_solution, times):
     end = dt.datetime.now()
     total_runtime = (end - start).total_seconds()
 
+
     avg_cost = (total_cost / times)
     improvement = 100 * (cost_init - best_objective) / cost_init
 
@@ -42,4 +44,4 @@ def local_search_initializer(init_solution, times):
 
     print("\nCompleted in " + "%.6f" % total_runtime + " seconds. \n")
 
-    print("--- End of Local Search Algorithm ---")
+    print("--- End of Simulated Annealing Algorithm ---")

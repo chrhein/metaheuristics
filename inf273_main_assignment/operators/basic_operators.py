@@ -1,6 +1,6 @@
 import random
 
-from setup import file_to_dataclass as x
+from setup import file_handler as x
 from tools.route_handler import get_calls_including_zeroes, get_index_positions
 
 
@@ -13,8 +13,8 @@ def one_reinsert(solution):
         return solution
     else:
         rand1 = random.choice(one_reinsert_list)
-        while rand1 == 0:
-            rand1 = random.choice(one_reinsert_list)
+        if rand1 == 0:
+            return solution
         one_reinsert_list.remove(rand1)
         one_reinsert_list.remove(rand1)
         calls[rand] = one_reinsert_list
@@ -42,9 +42,8 @@ def two_exchange(solution):
     else:
         rand1 = random.choice(two_exchange_list)
         rand2 = random.choice(two_exchange_list)
-        while rand1 == rand2 or rand1 == 0 or rand2 == 0:
-            rand1 = random.choice(two_exchange_list)
-            rand2 = random.choice(two_exchange_list)
+        if rand1 == rand2 or rand1 == 0 or rand2 == 0:
+            return solution
         rand1_indexes = get_index_positions(two_exchange_list, rand1)
         rand2_indexes = get_index_positions(two_exchange_list, rand2)
 
@@ -72,11 +71,8 @@ def three_exchange(solution):
         rand2 = random.choice(three_exchange_list)
         rand3 = random.choice(three_exchange_list)
 
-        while rand1 == rand2 or rand2 == rand3 or rand3 == rand1 or rand1 == 0 or rand2 == 0 or rand3 == 0:
-            rand1 = random.choice(three_exchange_list)
-            rand2 = random.choice(three_exchange_list)
-            rand3 = random.choice(three_exchange_list)
-
+        if rand1 == rand2 or rand2 == rand3 or rand3 == rand1 or rand1 == 0 or rand2 == 0 or rand3 == 0:
+            return solution
         rand1_indexes = get_index_positions(three_exchange_list, rand1)
         rand2_indexes = get_index_positions(three_exchange_list, rand2)
         rand3_indexes = get_index_positions(three_exchange_list, rand3)

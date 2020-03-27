@@ -1,7 +1,7 @@
 import sys
 
 from tools import route_handler as rh
-from setup import file_to_dataclass as x
+from setup import file_handler as x
 
 
 def cost_calc(solution):

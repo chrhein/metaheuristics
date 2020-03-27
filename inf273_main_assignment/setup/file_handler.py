@@ -1,4 +1,4 @@
-from setup.dataclasses import *
+from setup.data_classes import *
 
 filename = "assets/Call_7_Vehicle_3.txt"
 
