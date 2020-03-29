@@ -10,7 +10,7 @@ def main():
     # local_search_initializer(init_solution, times)
     # simulated_annealing_initializer(init_solution, times)
 
-    simulated_annealing_initializer(init_solution, 1)
+    simulated_annealing_initializer(init_solution, times)
 
 
 if __name__ == '__main__':

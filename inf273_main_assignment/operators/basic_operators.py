@@ -1,8 +1,7 @@
 import random
 
 from setup import file_handler as x
-from tools.calls_dict_to_solution import calls_to_solution
-from tools.route_handler import get_calls_including_zeroes, get_index_positions
+from tools.route_handler import get_calls_including_zeroes, get_index_positions, calls_to_solution
 
 
 def one_reinsert(solution):
