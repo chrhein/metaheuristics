@@ -6,7 +6,8 @@ def progress(i):
         sys.stdout.write("\033[F")
         print("Progress: ########################################")
         sys.stdout.write("\033[F")
-        print("Complete.                                           \n")
+
+        print("Progress: Complete                                \n")
     elif i >= 9750:
         sys.stdout.write("\033[F")
         print("Progress: #######################################-")

@@ -21,7 +21,7 @@ def simulated_annealing_new(init_solution):
     p2 = 0.33
     clear_seen()
     for i in range(1, 10000):
-        progress(i)
+        # progress(i)
         rand = random.uniform(0, 1)
         if rand < p1:
             new_solution = try_for_best(incumbent)
