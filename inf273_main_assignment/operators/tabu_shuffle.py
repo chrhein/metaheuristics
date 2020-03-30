@@ -4,6 +4,7 @@ import setup.file_handler as x
 from feasibility_checking.cost_calculation import f
 from feasibility_checking.feasibility_check import check_solution
 from tools.route_handler import get_calls_including_zeroes, calls_to_solution, route_planner
+from tools.tested_solutions import seen_before, seen
 
 
 def tabu_shuffle(solution):
@@ -25,18 +26,6 @@ def tabu_shuffle(solution):
         current = new_sol
     return current
 
-
-seen_before = []
-
-
-def seen(solution):
-    global seen_before
-    seen_before.append(solution)
-
-
-def clear_seen():
-    global seen_before
-    seen_before = []
 
 
 def neighbor_switch(calls, vehicle):

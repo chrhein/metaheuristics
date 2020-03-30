@@ -70,6 +70,11 @@ def get_most_expensive_calls(solution):
     return sorted_calls_by_value
 
 
+def most_expensive_dummy(solution):
+    dummy_calls = get_calls_including_zeroes(solution)[x.vehicles + 1]
+    return get_most_expensive_calls(dummy_calls)
+
+
 def calls_to_solution(calls_dict):
     new_solution = []
     for val in calls_dict.values():

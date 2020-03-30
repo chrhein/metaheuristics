@@ -1,11 +1,14 @@
 import math
 import random
+import sys
 
 from feasibility_checking.cost_calculation import f
 from feasibility_checking.feasibility_check import check_solution
 from operators.own_operator_1 import take_from_dummy_place_first_suitable
-from operators.tabu_shuffle import clear_seen, tabu_shuffle
+from operators.tabu_shuffle import tabu_shuffle
 from operators.try_for_best import try_for_best
+from tools.progress_bar import progress
+from tools.tested_solutions import clear_seen
 
 
 def simulated_annealing_new(init_solution):
@@ -18,6 +21,7 @@ def simulated_annealing_new(init_solution):
     p2 = 0.33
     clear_seen()
     for i in range(1, 10000):
+        progress(i)
         rand = random.uniform(0, 1)
         if rand < p1:
             new_solution = try_for_best(incumbent)
