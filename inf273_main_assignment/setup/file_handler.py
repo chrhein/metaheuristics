@@ -1,6 +1,13 @@
 from setup.data_classes import *
 
-filename = "assets/Call_18_Vehicle_5.txt"
+
+c7 = "assets/Call_7_Vehicle_3.txt"
+c18 = "assets/Call_18_Vehicle_5.txt"
+c35 = "assets/Call_035_Vehicle_07.txt"
+c80 = "assets/Call_080_Vehicle_20.txt"
+c130 = "assets/Call_130_Vehicle_40.txt"
+
+filename = c7
 
 with open(filename, "r") as f:
     file = f.readlines()

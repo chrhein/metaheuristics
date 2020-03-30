@@ -11,13 +11,15 @@ def simulated_annealing_initializer(init_solution, times):
     cost_init = f(init_solution)
 
     print("\nInitial solution:", init_solution)
-    print("\nCost of initial solution:", cost_init)
+    print("\nCost of initial solution:", cost_init, "\n")
     start = dt.datetime.now()
     total_cost = 0
     best_solution = init_solution
     best_objective = cost_init
     best_runtime = sys.maxsize
-    for _ in range(times):
+    for i in range(times):
+        i += 1
+        print("Running %d of %d." % (i, times))
         iter_start_time = dt.datetime.now()
         new_solution = simulated_annealing_new(init_solution)
         cost = f(new_solution)
@@ -29,9 +31,10 @@ def simulated_annealing_initializer(init_solution, times):
         iter_total_runtime = (iter_end_time - iter_start_time).total_seconds()
         if iter_total_runtime < best_runtime:
             best_runtime = iter_total_runtime
+        sys.stdout.write("\033[F")
+        print("\rRun %d completed. \n" % i)
     end = dt.datetime.now()
     total_runtime = (end - start).total_seconds()
-
 
     avg_cost = (total_cost / times)
     improvement = 100 * (cost_init - best_objective) / cost_init
