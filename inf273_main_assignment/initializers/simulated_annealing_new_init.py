@@ -18,7 +18,7 @@ def simulated_annealing_initializer(init_solution, times):
     best_objective = cost_init
     best_runtime = sys.maxsize
     for i in range(times):
-        print("Running %d of %d. \n" % (i + 1, times))
+        print("Run %d of %d. \n" % (i + 1, times))
         iter_start_time = dt.datetime.now()
         new_solution = simulated_annealing_new(init_solution)
         cost = f(new_solution)

@@ -1,7 +1,7 @@
 seen_before = []
 
 
-def seen(solution):
+def mark_as_seen(solution):
     global seen_before
     seen_before.append(solution)
 
@@ -11,6 +11,8 @@ def clear_seen():
     seen_before = []
 
 
-def in_seen_before():
+def in_seen_before(solution):
     global seen_before
-    return seen_before
+    if solution in seen_before:
+        return True
+    return False

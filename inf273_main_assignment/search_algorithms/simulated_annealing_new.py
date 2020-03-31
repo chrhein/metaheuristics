@@ -7,6 +7,7 @@ from feasibility_checking.feasibility_check import check_solution
 from operators.own_operator_1 import take_from_dummy_place_first_suitable
 from operators.tabu_shuffle import tabu_shuffle
 from operators.try_for_best import try_for_best
+from operators.weighted_one_insert import weighted_one_insert
 from tools.progress_bar import progress
 from tools.tested_solutions import clear_seen
 
@@ -21,14 +22,15 @@ def simulated_annealing_new(init_solution):
     p2 = 0.33
     clear_seen()
     for i in range(1, 10000):
-        # progress(i)
+        progress(i)
         rand = random.uniform(0, 1)
         if rand < p1:
-            new_solution = try_for_best(incumbent)
+            new_solution = tabu_shuffle(incumbent)
+            # print("New solution from TFB:", new_solution)
         elif rand < p1 + p2:
             new_solution = take_from_dummy_place_first_suitable(incumbent)
         else:
-            new_solution = tabu_shuffle(incumbent)
+            new_solution = weighted_one_insert(incumbent)
         delta_e = f(new_solution) - f(incumbent)
         rand_ii = random.uniform(0, 1)
         p = math.e * (-delta_e / t)
