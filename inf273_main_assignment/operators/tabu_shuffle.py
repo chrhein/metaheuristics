@@ -3,15 +3,10 @@ import random
 import setup.file_handler as x
 from feasibility_checking.cost_calculation import f
 from feasibility_checking.feasibility_check import check_solution
-from operators.weighted_one_insert import weighted_one_insert
 from tools.route_handler import get_calls_including_zeroes, calls_to_solution, route_planner
-from tools.tested_solutions import seen_before, mark_as_seen
 
 
 def tabu_shuffle(solution):
-    if solution in seen_before:
-        return solution
-    mark_as_seen(solution)
     calls = get_calls_including_zeroes(solution)
     rand_vehicle = random.randrange(1, x.vehicles)
 
@@ -26,7 +21,6 @@ def tabu_shuffle(solution):
     elif check_solution(new_sol) and random.uniform(0, 1) < 0.33:
         current = new_sol
     return current
-
 
 
 def neighbor_switch(calls, vehicle):

@@ -1,15 +1,14 @@
 import math
 import random
-import sys
-
+import operators.own_basic_ops as obo
 from feasibility_checking.cost_calculation import f
 from feasibility_checking.feasibility_check import check_solution
-from operators.own_operator_1 import take_from_dummy_place_first_suitable
-from operators.tabu_shuffle import tabu_shuffle
+from operators.best_travel_route import best_route, clear_br
+from operators.handle_most_expensive import remove_most_expensive_from_dummy, clear_rmefd
+from operators.own_basic_ops import take_from_dummy_place_first_suitable
+from operators.tabu_shuffle import tabu_shuffle, swingers
 from operators.try_for_best import try_for_best
-from operators.weighted_one_insert import weighted_one_insert
 from tools.progress_bar import progress
-from tools.tested_solutions import clear_seen
 
 
 def simulated_annealing_new(init_solution):
@@ -18,19 +17,19 @@ def simulated_annealing_new(init_solution):
     t0 = 1000
     t = t0
     a = 0.998
-    p1 = 0.33
-    p2 = 0.33
-    clear_seen()
+    p1 = 0.2
+    p2 = 0.2
+    clear_rmefd()
+    clear_br()
     for i in range(1, 10000):
         progress(i)
         rand = random.uniform(0, 1)
         if rand < p1:
-            new_solution = tabu_shuffle(incumbent)
-            # print("New solution from TFB:", new_solution)
+            new_solution = remove_most_expensive_from_dummy(incumbent)
         elif rand < p1 + p2:
             new_solution = take_from_dummy_place_first_suitable(incumbent)
         else:
-            new_solution = weighted_one_insert(incumbent)
+            new_solution = best_route(incumbent)
         delta_e = f(new_solution) - f(incumbent)
         rand_ii = random.uniform(0, 1)
         p = math.e * (-delta_e / t)
