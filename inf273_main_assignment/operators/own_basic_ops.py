@@ -33,6 +33,17 @@ def one_insert_most_expensive_call(solution):
     return calls_to_solution(calls)
 
 
+def fill_vehicles(solution):
+    a = take_from_dummy_place_first_suitable(solution)
+    b = fill_vehicle(solution)
+    if f(a) < f(b):
+        return a
+    else:
+        return b
+    # return take_from_dummy_place_first_suitable(ttttt(solution))
+    # return ttttt(take_from_dummy_place_first_suitable(solution))
+
+
 def take_from_dummy_place_first_suitable(solution):
     calls = get_calls_including_zeroes(solution)
     dummy_calls = calls[x.vehicles + 1]
@@ -47,7 +58,8 @@ def take_from_dummy_place_first_suitable(solution):
     # print(calls_to_solution(calls))
     return calls_to_solution(calls)
 
-def ttttt(solution):
+
+def fill_vehicle(solution):
     calls = get_calls_including_zeroes(solution)
     dummy_calls = calls[x.vehicles + 1]
     if not dummy_calls:
@@ -61,6 +73,7 @@ def ttttt(solution):
             calls[x.vehicles + 1] = dummy_removed
             break
     return calls_to_solution(calls)
+
 
 def weighted_one_insert(solution):
     calls = get_calls_including_zeroes(solution)

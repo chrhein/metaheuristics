@@ -14,11 +14,11 @@ from tools.progress_bar import progress
 def simulated_annealing_new(init_solution):
     best_solution = init_solution
     incumbent = init_solution
-    t0 = 1000
+    t0 = 38
     t = t0
     a = 0.998
-    p1 = 0.2
-    p2 = 0.2
+    p1 = 0.25
+    p2 = 0.5
     clear_rmefd()
     clear_br()
     for i in range(1, 10000):
@@ -27,7 +27,7 @@ def simulated_annealing_new(init_solution):
         if rand < p1:
             new_solution = remove_most_expensive_from_dummy(incumbent)
         elif rand < p1 + p2:
-            new_solution = take_from_dummy_place_first_suitable(incumbent)
+            new_solution = obo.fill_vehicles(incumbent)
         else:
             new_solution = best_route(incumbent)
         delta_e = f(new_solution) - f(incumbent)
