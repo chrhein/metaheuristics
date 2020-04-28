@@ -34,4 +34,4 @@ def alns_init(init_solution, times):
 
     p(start, total_cost, times, cost_init,
       best_objective, best_runtime, best_solution)
-    print("--- End of New Simulated Annealing Algorithm ---")
+    print("--- End of Adaptive Large Neighborhood Search ---")
