@@ -3,6 +3,7 @@ import sys
 
 from feasibility_checking.cost_calculation import f
 from search_algorithms.simulated_annealing import simulated_annealing
+from tools.printer import p
 
 
 def simulated_annealing_initializer(init_solution, times):
@@ -29,18 +30,7 @@ def simulated_annealing_initializer(init_solution, times):
         iter_total_runtime = (iter_end_time - iter_start_time).total_seconds()
         if iter_total_runtime < best_runtime:
             best_runtime = iter_total_runtime
-    end = dt.datetime.now()
-    total_runtime = (end - start).total_seconds()
 
-    avg_cost = (total_cost / times)
-    improvement = 100 * (cost_init - best_objective) / cost_init
-
-    print("Average cost: %.2d" % round(avg_cost, 0))
-    print("Best objective: %.2d" % round(best_objective, 0))
-    print("Improvement: %.2f \n" % round(improvement, 2))
-    print("Best runtime: " + "%.6f" % best_runtime + " seconds. \n")
-    print("Best solution:", best_solution)
-
-    print("\nCompleted in " + "%.6f" % total_runtime + " seconds. \n")
-
+    p(start, total_cost, times, cost_init,
+      best_objective, best_runtime, best_solution)
     print("--- End of Simulated Annealing Algorithm ---")
