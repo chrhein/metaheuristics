@@ -8,13 +8,14 @@ from initializers.simulated_annealing_new_init import new_simulated_annealing_in
 
 def main():
     init_solution = solution_generator()
-    times = 1
+    times = 10
+    runtime = 1
     # random_solution_initializer(init_solution, times)
     # local_search_initializer(init_solution, times)
     # simulated_annealing_initializer(init_solution, times)
     # new_simulated_annealing_initializer(init_solution, times)
 
-    alns_init(init_solution, times)
+    alns_init(init_solution, times, runtime)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 import sys
 
 
-def progress(i):
+def progress_bar(i):
     if i >= 9999:
 
         sys.stdout.write("\033[F")

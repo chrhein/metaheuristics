@@ -18,7 +18,7 @@ def remove_most_expensive_from_dummy(solution):
     most_expensive_calls = most_expensive_dummy(solution)
     if not most_expensive_calls:
         return solution
-    print(most_expensive_calls)
+    # print(most_expensive_calls)
     calls = get_calls_including_zeroes(solution)
     chosen_call = next(iter(most_expensive_calls))
     vehicle = 0

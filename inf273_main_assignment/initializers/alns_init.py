@@ -6,7 +6,7 @@ from search_algorithms.alns import adaptive_large_neighborhood_search
 from tools.printer import p
 
 
-def alns_init(init_solution, times):
+def alns_init(init_solution, times, runtime):
     print("--- Running Adaptive Large Neighborhood Search ---")
 
     cost_init = f(init_solution)
@@ -21,7 +21,7 @@ def alns_init(init_solution, times):
     for i in range(times):
         print("Run %d of %d. \n" % (i + 1, times))
         iter_start_time = dt.datetime.now()
-        new_solution = adaptive_large_neighborhood_search(init_solution)
+        new_solution = adaptive_large_neighborhood_search(init_solution, runtime)
         cost = f(new_solution)
         if cost < best_objective:
             best_objective = cost

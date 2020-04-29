@@ -81,6 +81,8 @@ def weighted_one_insert(solution):
     vehicle = random.randrange(1, x.vehicles + 2)
     # print("Chosen vehicle:", vehicle)
     tampered_calls = calls[vehicle]
+    if not tampered_calls:
+        return solution
     call = random.choice(tampered_calls)
     # print("Chosen call:", call)
     if call == 0:
@@ -105,19 +107,21 @@ def weighted_one_insert(solution):
 def move_to_next_valid_vehicle(solution):
     calls = get_calls_including_zeroes(solution)
     vehicle = random.randrange(1, x.vehicles + 2)
-    print("Vehicle chosen:", vehicle)
+    # print("Vehicle chosen:", vehicle)
     # print("Chosen vehicle:", vehicle)
     tampered_calls = calls[vehicle]
+    if not tampered_calls:
+        return solution
     call = random.choice(tampered_calls)
     # print("Chosen call:", call)
-    if call == 0:
+    if call == 0 or not call:
         return solution
     # tampered_calls = [i for i in tampered_calls if i != call]
     tampered_calls.remove(call)
     tampered_calls.remove(call)
     calls[vehicle] = tampered_calls
     vehicle = (vehicle + 1) % x.vehicles + 1
-    print("Chosen vehicle:", vehicle)
+    # print("Chosen vehicle:", vehicle)
 
     tampered_calls = calls[vehicle]
     tampered_calls.insert(0, call)

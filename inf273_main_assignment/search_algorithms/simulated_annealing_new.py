@@ -8,7 +8,7 @@ from operators.handle_most_expensive import remove_most_expensive_from_dummy, cl
 from operators.own_basic_ops import take_from_dummy_place_first_suitable
 from operators.tabu_shuffle import tabu_shuffle, swingers
 from operators.try_for_best import try_for_best
-from tools.progress_bar import progress
+from tools.progress_bar import progress_bar
 
 
 def simulated_annealing_new(init_solution):
@@ -22,7 +22,7 @@ def simulated_annealing_new(init_solution):
     clear_rmefd()
     clear_br()
     for i in range(1, 10000):
-        progress(i)
+        progress_bar(i)
         rand = random.uniform(0, 1)
         if rand < p1:
             new_solution = remove_most_expensive_from_dummy(incumbent)
