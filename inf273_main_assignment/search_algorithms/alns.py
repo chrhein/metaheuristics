@@ -63,7 +63,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
                  "best_route",
                  # "try_for_best",
                  # "weighted_one_insert",
-                 # "move_to_dummy"
+                 "move_to_dummy"
     ]
 
     curr_weights = []
@@ -79,7 +79,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     end = time.time() + runtime
     its_since_upd, iteration = 0, 0
 
-    t0 = 38
+    t0 = 1000
     t = t0
     a = 0.998
 
