@@ -8,7 +8,7 @@ from feasibility_checking.feasibility_check import check_solution
 from operators.best_travel_route import best_route
 from operators.handle_most_expensive import remove_most_expensive_from_dummy
 from operators.try_for_best import try_for_best
-from operators.tabu_shuffle import tabu_shuffle
+from operators.tabu_shuffle import tabu_shuffle, swingers
 from tools.progress_bar import progress_bar
 
 found_solutions = []
@@ -27,11 +27,28 @@ def update_weights(current, s, best, solutions_seen, weights, index):
     return weights
 
 
+
+
 def regulate_weights(prev, curr, usage):
+    # print("Current weights:", curr)
+    # print("Previous weights:", prev)
+    # print("Usage:", usage)
     new_curr = prev
     for i in range(len(new_curr)):
         new_curr[i] = prev[i] * 0.8 + 0.2 * (curr[i]/max(usage[i], 1))
     return new_curr
+
+
+def operator(op, curr_weights, s, best, found, index, usage, variable):
+
+    for _ in range(10):
+        current = op
+        if check_solution(current):
+            break
+    curr_weights = update_weights(current, s, best, found, curr_weights, index)
+    usage[index] += 1
+    variable += 1
+    return [current, curr_weights, usage, variable]
 
 
 def adaptive_large_neighborhood_search(init_solution, runtime):
@@ -41,75 +58,64 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     global found_solutions
     found_solutions = [init_solution]
 
-    curr_weights = [1, 1, 1, 1, 1]
+    operators = ["op1", "op2", "op3" , "op4", "op5", "op6", "op7"]
+
+    curr_weights = []
+    usage = []
+    total_usage = []
+
+    for i in range(len(operators)):
+        curr_weights.append(1)
+        usage.append(0)
+        total_usage.append(0)
+
     prev_weights = curr_weights.copy()
-    operators = ["op1", "op2", "op3", "op4", "op5"]
-    usage = [0, 0, 0, 0, 0]
     end = time.time() + runtime
     its_since_upd, iteration = 0, 0
-
-    i, j, k, l_, m = 0, 0, 0, 0, 0
 
     t0 = 38
     t = t0
     a = 0.998
 
-    while iteration < 10000:
+    while time.time() < end:
         iteration += 1
-        if its_since_upd > 5:
-            for _ in range(10):
-                current = obo.move_to_next_valid_vehicle(s)
+        if its_since_upd > 10:
+            # print("Current before change:", current)
+            current = obo.move_to_dummy(current)
+
+            # print("Current after change:", current)
         if iteration % 100 == 0:
             prev_weights = curr_weights
             curr_weights = regulate_weights(prev_weights, curr_weights, usage)
-            usage = [0, 0, 0, 0, 0]
+            for i in range(len(operators)):
+                usage[i] = 0
         else:
             current = s
         chosen_op = random.choices(operators, prev_weights).pop(0)
         if chosen_op == "op1":
-            for _ in range(10):
-                current = remove_most_expensive_from_dummy(current)
-                if check_solution(current):
-                    break
-            curr_weights = update_weights(current, s, best, found_solutions, curr_weights, 0)
-            usage[0] += 1
-            i += 1
+            oc = obo.move_to_next_valid_vehicle(current)
         elif chosen_op == "op2":
-            for _ in range(10):
-                current = obo.fill_vehicles(current)
-                if check_solution(current):
-                    break
-            curr_weights = update_weights(current, s, best, found_solutions, curr_weights, 1)
-            usage[1] += 1
-            j += 1
+            oc = remove_most_expensive_from_dummy(current)
         elif chosen_op == "op3":
-            for _ in range(10):
-                current = best_route(current)
-                if check_solution(current):
-                    break
-            curr_weights = update_weights(current, s, best, found_solutions, curr_weights, 2)
-            usage[2] += 1
-            k += 1
+            oc = best_route(current)
         elif chosen_op == "op4":
-            for _ in range(10):
-                current = try_for_best(current)
-                if check_solution(current):
-                    break
-            curr_weights = update_weights(current, s, best, found_solutions, curr_weights, 3)
-            usage[3] += 1
-            l_ += 1
+            oc = try_for_best(current)
         elif chosen_op == "op5":
-            for _ in range(10):
-                current = tabu_shuffle(current)
-                if check_solution(current):
-                    break
-            curr_weights = update_weights(current, s, best, found_solutions, curr_weights, 4)
-            usage[4] += 1
-            m += 1
+            oc = tabu_shuffle(current)
+        elif chosen_op == "op6":
+            oc = obo.one_insert_most_expensive_call(current)
+        elif chosen_op == "op7":
+            oc = swingers(current)
+
+        op_index = operators.index(chosen_op)
+        op = operator(oc, curr_weights, s, best, found_solutions,
+                      op_index, usage, total_usage[op_index])
+        current, curr_weights, usage, total_usage[op_index] = op[0], op[1], op[2], op[3]
 
         delta_e = f(current) - f(s)
         rand_ii = random.uniform(0, 1)
         p = math.e * (-delta_e / t)
+
         if check_solution(current) and delta_e < 0:
             s = current
             its_since_upd = 0
@@ -120,20 +126,11 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             its_since_upd = 0
         else:
             its_since_upd += 1
+
         t = a * t
-        #
-        # if f(current) < f(best) and check_solution(current):
-        #     best = current
-        # if f(current) < f(s) and check_solution(current):
-        #     s = current
-        #     its_since_upd = 0
-        # else:
-        #     its_since_upd += 1
-    print("op1:", i)
-    print("op2:", j)
-    print("op3:", k)
-    print("op4:", l_)
-    print("op5:", m)
-    print("weights:", curr_weights, "\n")
+
+    for i in range(len(operators)):
+        print("%s: %d" % (operators[i], total_usage[i]))
+    print("\n")
 
     return best

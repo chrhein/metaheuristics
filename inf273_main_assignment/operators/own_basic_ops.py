@@ -128,3 +128,24 @@ def move_to_next_valid_vehicle(solution):
     tampered_calls.insert(0, call)
     calls[vehicle] = tampered_calls
     return calls_to_solution(calls)
+
+
+def move_to_dummy(solution):
+    calls = get_calls_including_zeroes(solution)
+    vehicle = random.randrange(1, x.vehicles + 2)
+    tampered_calls = calls[vehicle]
+    if not tampered_calls:
+        return solution
+    call = random.choice(tampered_calls)
+    # print("Chosen call:", call)
+    if call == 0 or not call:
+        return solution
+    tampered_calls.remove(call)
+    tampered_calls.remove(call)
+    calls[vehicle] = tampered_calls
+    vehicle = x.vehicles + 1
+    tampered_calls = calls[vehicle]
+    tampered_calls.insert(0, call)
+    tampered_calls.insert(0, call)
+    calls[vehicle] = tampered_calls
+    return calls_to_solution(calls)

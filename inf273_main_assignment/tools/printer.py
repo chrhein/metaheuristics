@@ -9,7 +9,8 @@ def p(start, total_cost, times, cost_init,
     avg_cost = (total_cost / times)
     improvement = 100 * (cost_init - best_objective) / cost_init
 
-    print("Average cost: %.2d" % round(avg_cost, 0))
+    if times > 1:
+        print("Average cost: %.2d" % round(avg_cost, 0))
     print("Best objective: %.2d" % round(best_objective, 0))
     print("Improvement: %.2f \n" % round(improvement, 2))
     print("Best runtime: " + "%.6f" % best_runtime + " seconds. \n")
