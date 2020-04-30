@@ -1,8 +1,22 @@
+import copy
 import random
 
 import setup.file_handler as x
 from feasibility_checking.cost_calculation import f
+from feasibility_checking.feasibility_check import check_solution
 from tools.route_handler import get_calls_including_zeroes, get_most_expensive_calls, calls_to_solution
+
+
+def shuffle(solution):
+    print("s_init:", solution)
+    s = copy.deepcopy(solution)
+    s = random.shuffle(s)
+    print("s_shuffled:" , s)
+    while not check_solution(s):
+        "Shuffling"
+        s = random.shuffle(s)
+    return s
+
 
 
 def one_insert_most_expensive_call(solution):
@@ -40,8 +54,6 @@ def fill_vehicles(solution):
         return a
     else:
         return b
-    # return take_from_dummy_place_first_suitable(ttttt(solution))
-    # return ttttt(take_from_dummy_place_first_suitable(solution))
 
 
 def take_from_dummy_place_first_suitable(solution):

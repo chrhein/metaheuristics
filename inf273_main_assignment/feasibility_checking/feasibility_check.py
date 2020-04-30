@@ -11,7 +11,6 @@ def check_solution(solution):
     currently_transporting_size = 0
     pickups = []
     currently_transporting = []
-    route = route_planner(solution)
     for sol_call in solution:
         # zeroes marks switch of vehicles
         if sol_call == 0:
@@ -44,6 +43,7 @@ def check_solution(solution):
                 currently_transporting.remove(sol_call)
                 currently_transporting_size -= call.size
     current_vehicle_index = 1
+    route = route_planner(solution)
     for vehicle in v:
         total_time = time_calc(current_vehicle_index,
                                route.get(v.get(vehicle).vehicle_index), v, c)
