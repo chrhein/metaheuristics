@@ -53,7 +53,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     global found_solutions
     found_solutions.append(init_solution)
 
-    operators = ["op1", "op2", "op3", "op4", "op5", "op6", "op7", "op8", "op9", "op10"]
+    operators = ["move_to_next_valid_vehicle", "fill_vehicles", "three_exchange", "one_insert_most_expensive_call",
+                 "best_route", "remove_most_expensive_from_dummy"]
 
     curr_weights = []
     usage = []
@@ -72,11 +73,16 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     t = t0
     a = 0.998
 
+    break_its = 25000
+
     while time.time() < end:
+        # progress_bar(its_since_upd)
         iteration += 1
+        if its_since_upd > break_its:
+            break
         if its_since_upd > 25:
             current = one_reinsert(current)
-        if iteration % 100 == 0 and iteration > 0:
+        if iteration % 500 == 0 and iteration > 0:
             prev_weights = curr_weights
             curr_weights = regulate_weights(prev_weights, curr_weights, usage)
             for i in range(len(operators)):
@@ -84,25 +90,25 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         else:
             current = s
         chosen_op = random.choices(operators, prev_weights, k=1).pop(0)
-        if chosen_op == "op1":
+        if chosen_op == "move_to_next_valid_vehicle":
             oc = obo.move_to_next_valid_vehicle
-        elif chosen_op == "op2":
-            oc = try_for_best
-        elif chosen_op == "op3":
+        # elif chosen_op == "op2":
+        #     oc = try_for_best
+        elif chosen_op == "fill_vehicles":
             oc = obo.fill_vehicles
-        elif chosen_op == "op4":
-            oc = one_reinsert
-        elif chosen_op == "op5":
-            oc = two_exchange
-        elif chosen_op == "op6":
+        # elif chosen_op == "op4":
+        #     oc = one_reinsert
+        # elif chosen_op == "op5":
+        #     oc = two_exchange
+        elif chosen_op == "three_exchange":
             oc = three_exchange
-        elif chosen_op == "op7":
+        elif chosen_op == "one_insert_most_expensive_call":
             oc = obo.one_insert_most_expensive_call
-        elif chosen_op == "op8":
+        elif chosen_op == "best_route":
             oc = best_route
-        elif chosen_op == "op9":
-            oc = try_for_best
-        elif chosen_op == "op10":
+        # elif chosen_op == "op9":
+        #     oc = try_for_best
+        elif chosen_op == "remove_most_expensive_from_dummy":
             oc = remove_most_expensive_from_dummy
 
         op_index = operators.index(chosen_op)
@@ -127,8 +133,15 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
 
         t = a * t
 
+    usage_dict = {}
     for i in range(len(operators)):
-        print("%s: %d" % (operators[i], total_usage[i]))
-    print("\n")
+        usage_dict[operators[i]] = total_usage[i]
+        # print("%d - %s" % (total_usage[i], operators[i]))
 
+    u_d = {k: v for k, v in sorted(usage_dict.items(), key=lambda item: item[1], reverse=True)}
+
+    for key, value in u_d.items():
+        print("%d: %s" % (value, key))
+
+    print()
     return best
