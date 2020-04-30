@@ -17,7 +17,6 @@ def clear_br():
 
 def best_objective(solution):
     routes = list(itertools.permutations(solution))
-    print(routes)
     best_solution = solution
     for route in routes:
         if f(route) < f(best_solution) and check_solution(route):

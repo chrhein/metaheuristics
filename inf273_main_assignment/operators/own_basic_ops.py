@@ -8,15 +8,12 @@ from tools.route_handler import get_calls_including_zeroes, get_most_expensive_c
 
 
 def shuffle(solution):
-    print("s_init:", solution)
-    s = copy.deepcopy(solution)
-    s = random.shuffle(s)
-    print("s_shuffled:" , s)
-    while not check_solution(s):
-        "Shuffling"
-        s = random.shuffle(s)
-    return s
-
+    new_s = copy.deepcopy(solution)
+    for _ in range(1000):
+        random.shuffle(new_s)
+        if check_solution(new_s):
+            return new_s
+    return solution
 
 
 def one_insert_most_expensive_call(solution):
