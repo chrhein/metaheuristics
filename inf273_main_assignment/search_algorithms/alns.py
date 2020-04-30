@@ -63,7 +63,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
                  "best_route",
                  # "try_for_best",
                  # "weighted_one_insert",
-                 "move_to_dummy"
+                 # "move_to_dummy"
     ]
 
     curr_weights = []
@@ -89,19 +89,18 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     while time.time() < end:
         # progress_bar(its_since_upd)
         iteration += 1
+        current = s
         if its_since_upd > break_its:
             break
-        # if its_since_upd > 100:
-        #     current = obo.move_to_dummy(current)
-        if its_since_upd > 25:
+        if its_since_upd % 100 == 0 and iteration > 0:
+            current = obo.move_to_dummy(current)
+        if its_since_upd > 20:
             current = one_reinsert(current)
         if iteration % weights_refresh_rate == 0 and iteration > 0:
             prev_weights = curr_weights
             curr_weights = regulate_weights(prev_weights, curr_weights, usage)
             for i in range(len(operators)):
                 usage[i] = 0
-        else:
-            current = s
         chosen_op = random.choices(operators, prev_weights, k=1).pop(0)
         if chosen_op == "move_to_next_valid_vehicle":
             oc = obo.move_to_next_valid_vehicle
