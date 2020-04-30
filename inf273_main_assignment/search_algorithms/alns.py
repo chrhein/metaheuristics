@@ -53,8 +53,18 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     global found_solutions
     found_solutions.append(init_solution)
 
-    operators = ["move_to_next_valid_vehicle", "fill_vehicles", "three_exchange", "one_insert_most_expensive_call",
-                 "best_route", "remove_most_expensive_from_dummy"]
+    operators = [  # "one_reinsert",
+                 "two_exchange",
+                 "three_exchange",
+                 "one_insert_most_expensive_call",
+                 # "remove_most_expensive_from_dummy",
+                 "move_to_next_valid_vehicle",
+                 "fill_vehicles",
+                 "best_route",
+                 # "try_for_best",
+                 # "weighted_one_insert",
+                 # "move_to_dummy"
+    ]
 
     curr_weights = []
     usage = []
@@ -74,15 +84,18 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     a = 0.998
 
     break_its = 25000
+    weights_refresh_rate = 100
 
     while time.time() < end:
         # progress_bar(its_since_upd)
         iteration += 1
         if its_since_upd > break_its:
             break
+        # if its_since_upd > 100:
+        #     current = obo.move_to_dummy(current)
         if its_since_upd > 25:
             current = one_reinsert(current)
-        if iteration % 500 == 0 and iteration > 0:
+        if iteration % weights_refresh_rate == 0 and iteration > 0:
             prev_weights = curr_weights
             curr_weights = regulate_weights(prev_weights, curr_weights, usage)
             for i in range(len(operators)):
@@ -92,24 +105,26 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         chosen_op = random.choices(operators, prev_weights, k=1).pop(0)
         if chosen_op == "move_to_next_valid_vehicle":
             oc = obo.move_to_next_valid_vehicle
-        # elif chosen_op == "op2":
-        #     oc = try_for_best
+        elif chosen_op == "try_for_best":
+            oc = try_for_best
         elif chosen_op == "fill_vehicles":
             oc = obo.fill_vehicles
-        # elif chosen_op == "op4":
-        #     oc = one_reinsert
-        # elif chosen_op == "op5":
-        #     oc = two_exchange
+        elif chosen_op == "one_reinsert":
+            oc = one_reinsert
+        elif chosen_op == "two_exchange":
+            oc = two_exchange
         elif chosen_op == "three_exchange":
             oc = three_exchange
         elif chosen_op == "one_insert_most_expensive_call":
             oc = obo.one_insert_most_expensive_call
         elif chosen_op == "best_route":
             oc = best_route
-        # elif chosen_op == "op9":
-        #     oc = try_for_best
         elif chosen_op == "remove_most_expensive_from_dummy":
             oc = remove_most_expensive_from_dummy
+        elif chosen_op == "weighted_one_insert":
+            oc = obo.weighted_one_insert
+        elif chosen_op == "move_to_dummy":
+            oc = obo.move_to_dummy
 
         op_index = operators.index(chosen_op)
         op = operator(oc, current, curr_weights, s, best, found_solutions,
