@@ -48,6 +48,43 @@ def operator(op, curr_sol, curr_weights, s, best, found, index, usage, variable)
     return [current, curr_weights, usage, variable]
 
 
+def get_break_its():
+    calls = x.calls
+    if calls < 10:
+        return 1000
+    elif calls < 50:
+        return 5000
+    elif calls < 100:
+        return 10000
+    else:
+        return 25000
+
+
+def ops():
+    op = [  # "one_reinsert",
+                 "two_exchange",
+                 "three_exchange",
+                 "one_insert_most_expensive_call",
+                 "remove_most_expensive_from_dummy",
+                 # "move_to_next_valid_vehicle",
+                 # "fill_vehicles",
+                 # "best_route",
+                 # "try_for_best",
+                 "weighted_one_insert",
+                 # "move_to_dummy"
+    ]
+    return op
+
+
+def its():
+    testing_mode = True
+    if testing_mode:
+        return 50000
+    else:
+        return get_break_its()
+    pass
+
+
 def adaptive_large_neighborhood_search(init_solution, runtime):
     s = init_solution
     best = init_solution
@@ -55,31 +92,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     global found_solutions
     found_solutions.append(init_solution)
 
-    operators = [  # "one_reinsert",
-                 # "two_exchange",
-                 "three_exchange",
-                 "one_insert_most_expensive_call",
-                 # "remove_most_expensive_from_dummy",
-                 # "move_to_next_valid_vehicle",
-                 "fill_vehicles",
-                 # "best_route",
-                 # "try_for_best",
-                 # "weighted_one_insert",
-                 # "move_to_dummy"
-    ]
-
-    calls = x.calls
-    if calls < 10:
-        break_its = 250
-    elif calls < 25:
-        break_its = 1000
-    elif calls < 50:
-        break_its = 5000
-    elif calls < 100:
-        break_its = 10000
-    else:
-        break_its = 25000
-
+    operators = ops()
+    break_its = its()
     curr_weights = []
     usage = []
     total_usage = []
@@ -97,7 +111,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     t = t0
     a = 0.998
 
-    weights_refresh_rate = 100
+    weights_refresh_rate = 500
+    diversification_rate = 100
 
     while time.time() < end:
         # progress_bar(its_since_upd)
@@ -105,9 +120,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         current = s
         if its_since_upd > break_its:
             break
-        if its_since_upd % 100 == 0 and iteration > 0:
-            current = obo.move_to_dummy(current)
-        if its_since_upd > 20:
+
+        if its_since_upd > 25:
             current = one_reinsert(current)
         if iteration % weights_refresh_rate == 0 and iteration > 0:
             prev_weights = curr_weights
