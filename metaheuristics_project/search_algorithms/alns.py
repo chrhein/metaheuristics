@@ -36,7 +36,6 @@ def regulate_weights(prev, curr, usage):
     new_curr = prev
     for i in range(len(new_curr)):
         new_curr[i] = prev[i] * 0.8 + 0.2 * (curr[i] / max(usage[i], 1))
-        # print("Updated weight for index %d in usage: %f" % (i, new_curr[i]))
     return new_curr
 
 
@@ -67,7 +66,7 @@ def ops():
                  "one_insert_most_expensive_call",
                  "remove_most_expensive_from_dummy",
                  # "move_to_next_valid_vehicle",
-                 # "fill_vehicles",
+                 "fill_vehicles",
                  # "best_route",
                  # "try_for_best",
                  "weighted_one_insert",
@@ -107,12 +106,12 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     end = time.time() + runtime
     its_since_upd, iteration = 0, 0
 
-    t0 = 1000
+    t0 = 100
     t = t0
     a = 0.998
 
-    weights_refresh_rate = 500
-    diversification_rate = 100
+    weights_refresh_rate = 50
+    diversification_rate = 500
 
     while time.time() < end:
         # progress_bar(its_since_upd)
@@ -121,7 +120,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         if its_since_upd > break_its:
             break
 
-        if its_since_upd > 25:
+        if its_since_upd > diversification_rate:
             current = one_reinsert(current)
         if iteration % weights_refresh_rate == 0 and iteration > 0:
             prev_weights = curr_weights
@@ -177,7 +176,6 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     usage_dict = {}
     for i in range(len(operators)):
         usage_dict[operators[i]] = total_usage[i]
-        # print("%d - %s" % (total_usage[i], operators[i]))
 
     u_d = {k: v for k, v in sorted(usage_dict.items(), key=lambda item: item[1], reverse=True)}
 
