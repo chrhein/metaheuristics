@@ -3,6 +3,8 @@ import math
 import random
 import time
 
+import setup.file_handler as x
+
 import operators.own_basic_ops as obo
 from feasibility_checking.cost_calculation import f
 from feasibility_checking.feasibility_check import check_solution
@@ -54,17 +56,29 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     found_solutions.append(init_solution)
 
     operators = [  # "one_reinsert",
-                 "two_exchange",
+                 # "two_exchange",
                  "three_exchange",
                  "one_insert_most_expensive_call",
                  # "remove_most_expensive_from_dummy",
-                 "move_to_next_valid_vehicle",
+                 # "move_to_next_valid_vehicle",
                  "fill_vehicles",
-                 "best_route",
+                 # "best_route",
                  # "try_for_best",
                  # "weighted_one_insert",
                  # "move_to_dummy"
     ]
+
+    calls = x.calls
+    if calls < 10:
+        break_its = 250
+    elif calls < 25:
+        break_its = 1000
+    elif calls < 50:
+        break_its = 5000
+    elif calls < 100:
+        break_its = 10000
+    else:
+        break_its = 25000
 
     curr_weights = []
     usage = []
@@ -83,7 +97,6 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     t = t0
     a = 0.998
 
-    break_its = 25000
     weights_refresh_rate = 100
 
     while time.time() < end:
