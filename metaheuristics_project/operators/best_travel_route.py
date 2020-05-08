@@ -34,8 +34,8 @@ def best_route(solution):
     if route in tested_solutions:
         return solution
     tested_solutions.append(route)
-    if len(route) > 7:
-        return solution
+    # if len(route) > 7:
+    #     return solution
     all_combs = list(set(itertools.permutations(route)))
 
     nl = [list(row) for row in all_combs]

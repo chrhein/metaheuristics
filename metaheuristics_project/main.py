@@ -8,9 +8,9 @@ from initializers.simulated_annealing_new_init import new_simulated_annealing_in
 
 def main():
     init_solution = solution_generator()
-    times = 10
-    runtime = 20
-    r = runtime - 0.1
+    times = 1
+    runtime = 10
+    r = runtime - 0.005
     # random_solution_initializer(init_solution, times)
     # local_search_initializer(init_solution, times)
     # simulated_annealing_initializer(init_solution, times)
