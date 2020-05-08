@@ -10,25 +10,31 @@ from feasibility_checking.feasibility_check import check_solution
 from operators.basic_operators import three_exchange, one_reinsert, two_exchange
 from operators.best_travel_route import best_route
 from operators.handle_most_expensive import remove_most_expensive_from_dummy
-from operators.one_reinsert import smarter_one_reinsert
+from operators.op_package.one_reinsert import smarter_one_reinsert
 from operators.op_package.swap import swap
+from operators.op_package.three_exchange import smarter_three_exchange
+from operators.op_package.triple_swap import triple_swap
+from operators.op_package.two_exchange import smarter_two_exchange
 from operators.try_for_best import try_for_best
 
 
 def ops():
     op = [  # "one_reinsert",
-          "two_exchange",
-          "three_exchange",
-          # "one_insert_most_expensive_call",
-          "remove_most_expensive_from_dummy",
-          # "move_to_next_valid_vehicle",
+          # "two_exchange",
+          # "three_exchange",
+          "one_insert_most_expensive_call",
+          # "remove_most_expensive_from_dummy",
+          "move_to_next_valid_vehicle",
           # "fill_vehicles",
           # "best_route",
           # "try_for_best",
-          # "weighted_one_insert",
-          "move_to_dummy",
+          "weighted_one_insert",
+          # "move_to_dummy",
           "swap",
-          "smarter_one_reinsert"
+          "triple_swap",
+          "smarter_one_reinsert",
+          "smarter_two_exchange",
+          "smarter_three_exchange"
           ]
     return op
 
@@ -88,8 +94,14 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = three_exchange
         elif chosen_op == "swap":
             oc = swap
+        elif chosen_op == "triple_swap":
+            oc = triple_swap
         elif chosen_op == "smarter_one_reinsert":
             oc = smarter_one_reinsert
+        elif chosen_op == "smarter_two_exchange":
+            oc = smarter_two_exchange
+        elif chosen_op == "smarter_three_exchange":
+            oc = smarter_three_exchange
         elif chosen_op == "one_insert_most_expensive_call":
             oc = obo.one_insert_most_expensive_call
         elif chosen_op == "best_route":

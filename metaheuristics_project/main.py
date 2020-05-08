@@ -9,7 +9,7 @@ from setup.file_handler import get_runtime
 
 def main():
     init_solution = solution_generator()
-    times = 1
+    times = 3
     runtime = get_runtime()
     r = runtime - 0.005
     # random_solution_initializer(init_solution, times)
