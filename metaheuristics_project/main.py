@@ -9,15 +9,17 @@ from setup.file_handler import get_runtime
 
 def main():
     init_solution = solution_generator()
-    times = 3
+    times = 10
     runtime = get_runtime()
-    r = runtime - 0.005
+    # r = runtime - 0.005
+    r = runtime
+
     # random_solution_initializer(init_solution, times)
     # local_search_initializer(init_solution, times)
     # simulated_annealing_initializer(init_solution, times)
     # new_simulated_annealing_initializer(init_solution, times)
 
-    print("Runtime:", runtime)
+    print("\nRuntime:", runtime, "\n")
     alns_init(init_solution, times, r)
 
 

@@ -22,14 +22,14 @@ def ops():
     op = [  # "one_reinsert",
           # "two_exchange",
           # "three_exchange",
-          "one_insert_most_expensive_call",
+          # "one_insert_most_expensive_call",
           # "remove_most_expensive_from_dummy",
-          "move_to_next_valid_vehicle",
+          # "move_to_next_valid_vehicle",
           # "fill_vehicles",
           # "best_route",
           # "try_for_best",
-          "weighted_one_insert",
-          # "move_to_dummy",
+          # "weighted_one_insert",
+          "move_to_dummy",
           "swap",
           "triple_swap",
           "smarter_one_reinsert",
@@ -73,7 +73,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         if its_since_upd > break_its:
             break
         if its_since_upd > diversification_rate:
-            current = one_reinsert(current)
+            current = obo.fill_vehicles(current)
         if iteration % weights_refresh_rate == 0 and iteration > 0:
             prev_weights = curr_weights
             curr_weights = regulate_weights(prev_weights, curr_weights, usage)
@@ -132,7 +132,6 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             its_since_upd = 0
         else:
             its_since_upd += 1
-
         t = a * t0
 
     usage_dict = {}
@@ -200,7 +199,7 @@ def its():
 def parameters():
     temperature, cooling_rate = 100, 0.998
     t = temperature
-    weights_refresh_rate = 50
-    diversification_rate = 500
+    weights_refresh_rate = 250
+    diversification_rate = 50
     return [temperature, t, cooling_rate, weights_refresh_rate, diversification_rate]
 

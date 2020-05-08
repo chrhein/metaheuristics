@@ -5,11 +5,11 @@ from operators.basic_operators import three_exchange
 
 def smarter_three_exchange(solution):
     new_sol = three_exchange(solution)
-    for i in range(0, 10):
+    for i in range(0, 25):
         if f(new_sol) < f(solution):
             if check_solution(new_sol):
                 break
-    new_sol = three_exchange(solution)
+    new_sol = three_exchange(new_sol)
     if check_solution(new_sol):
         return new_sol
     else:
