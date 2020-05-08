@@ -1,4 +1,3 @@
-import copy
 import math
 import random
 import time
@@ -9,13 +8,11 @@ import operators.own_basic_ops as obo
 from feasibility_checking.cost_calculation import f
 from feasibility_checking.feasibility_check import check_solution
 from operators.basic_operators import three_exchange, one_reinsert, two_exchange
-from operators.best_travel_route import best_route, best_objective
+from operators.best_travel_route import best_route
 from operators.handle_most_expensive import remove_most_expensive_from_dummy
-from operators.swap import swap
+from operators.one_reinsert import smarter_one_reinsert
+from operators.op_package.swap import swap
 from operators.try_for_best import try_for_best
-from operators.tabu_shuffle import tabu_shuffle, swingers
-from search_algorithms.simulated_annealing import simulated_annealing
-from tools.progress_bar import progress_bar
 
 
 def ops():
@@ -24,13 +21,14 @@ def ops():
           "three_exchange",
           # "one_insert_most_expensive_call",
           "remove_most_expensive_from_dummy",
-          "move_to_next_valid_vehicle",
-          "fill_vehicles",
+          # "move_to_next_valid_vehicle",
+          # "fill_vehicles",
           # "best_route",
           # "try_for_best",
-          "weighted_one_insert",
-          # "move_to_dummy",
-          "swap"
+          # "weighted_one_insert",
+          "move_to_dummy",
+          "swap",
+          "smarter_one_reinsert"
           ]
     return op
 
@@ -39,7 +37,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     s = init_solution
     best = init_solution
     global found_solutions
-    found_solutions.append(init_solution)
+    found_solutions.add(tuple(init_solution))
 
     operators = ops()
     break_its = its()
@@ -90,6 +88,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = three_exchange
         elif chosen_op == "swap":
             oc = swap
+        elif chosen_op == "smarter_one_reinsert":
+            oc = smarter_one_reinsert
         elif chosen_op == "one_insert_most_expensive_call":
             oc = obo.one_insert_most_expensive_call
         elif chosen_op == "best_route":
@@ -136,17 +136,17 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     return best
 
 
-found_solutions = []
+found_solutions = set()
 
 
 def update_weights(current, s, best, solutions_seen, weights, index):
     if check_solution(current):
         if f(current) < f(s):
             weights[index] += 1
-        if current not in solutions_seen:
+        if tuple(current) not in solutions_seen:
             weights[index] += 2
             global found_solutions
-            found_solutions.append(current)
+            found_solutions.add(tuple(current))
         if f(current) < f(best):
             weights[index] += 4
     return weights

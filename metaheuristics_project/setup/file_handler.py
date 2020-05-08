@@ -9,6 +9,20 @@ c130 = "assets/Call_130_Vehicle_40.txt"
 
 filename = c18
 
+
+def get_runtime():
+    if filename == c7:
+        return 10
+    elif filename == c18:
+        return 20
+    elif filename == c35:
+        return 50
+    elif filename == c80:
+        return 120
+    elif filename == c130:
+        return 400
+
+
 with open(filename, "r") as f:
     file = f.readlines()
 

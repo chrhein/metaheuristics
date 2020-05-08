@@ -4,18 +4,20 @@ from initializers.local_search_init import local_search_initializer
 from initializers.random_search_init import random_solution_initializer
 from initializers.simulated_annealing_init import simulated_annealing_initializer
 from initializers.simulated_annealing_new_init import new_simulated_annealing_initializer
+from setup.file_handler import get_runtime
 
 
 def main():
     init_solution = solution_generator()
     times = 1
-    runtime = 10
+    runtime = get_runtime()
     r = runtime - 0.005
     # random_solution_initializer(init_solution, times)
     # local_search_initializer(init_solution, times)
     # simulated_annealing_initializer(init_solution, times)
     # new_simulated_annealing_initializer(init_solution, times)
 
+    print("Runtime:", runtime)
     alns_init(init_solution, times, r)
 
 

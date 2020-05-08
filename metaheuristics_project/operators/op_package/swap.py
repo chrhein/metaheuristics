@@ -23,14 +23,14 @@ def swap(solution):
     new_calls = calls
     new_calls[vehicle] = new_route
     it = 0
-    while f(calls_to_solution(new_calls)) > f(solution) and check_solution(calls_to_solution(new_calls)):
+    while f(calls_to_solution(new_calls)) > f(solution) and not check_solution(calls_to_solution(new_calls)):
         rand1 = random.randrange(0, len(new_route))
         rand2 = random.randrange(0, len(new_route))
-        if rand1 == 0 or rand2 == 0:
+        if rand1 == 0 or rand2 == 0 or (rand1 == rand2):
             continue
         new_route[rand1], new_route[rand2] = new_route[rand2], new_route[rand1]
         new_calls[vehicle] = new_route
-        if it == 100:
+        if it == 250:
             return solution
         else:
             it += 1
