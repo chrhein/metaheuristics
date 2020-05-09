@@ -5,8 +5,8 @@ def calls_to_nodes(vehicle_route):
     pu = []
     route_in_nodes = []
     for call in vehicle_route:
-        o = x.calls_dict.get(call).origin_node
-        d = x.calls_dict.get(call).destination_node
+        o = x.calls_dict[call].origin_node
+        d = x.calls_dict[call].destination_node
         if call not in pu:
             pu.append(call)
             route_in_nodes.append(o)
@@ -65,7 +65,7 @@ def get_most_expensive_calls(solution):
     calls = {}
     for call in solution:
         if call != 0:
-            calls[call] = x.calls_dict.get(call).cost_no_transport
+            calls[call] = x.calls_dict[call].cost_no_transport
     sorted_calls_by_value = {k: v for k, v in sorted(calls.items(), key=lambda item: item[1], reverse=True)}
     return sorted_calls_by_value
 
@@ -81,3 +81,6 @@ def calls_to_solution(calls_dict):
         for call in val:
             new_solution.append(call)
     return new_solution
+
+
+

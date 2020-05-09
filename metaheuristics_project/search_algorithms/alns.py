@@ -1,3 +1,4 @@
+import copy
 import math
 import random
 import time
@@ -19,13 +20,13 @@ from operators.try_for_best import try_for_best
 
 
 def ops():
-    op = [  # "one_reinsert",
+    op = [# "one_reinsert",
           # "two_exchange",
           # "three_exchange",
-          # "one_insert_most_expensive_call",
-          # "remove_most_expensive_from_dummy",
-          # "move_to_next_valid_vehicle",
-          # "fill_vehicles",
+          "one_insert_most_expensive_call",
+          "remove_most_expensive_from_dummy",
+          "move_to_next_valid_vehicle",
+          "fill_vehicles",
           # "best_route",
           # "try_for_best",
           # "weighted_one_insert",
@@ -34,7 +35,8 @@ def ops():
           "triple_swap",
           "smarter_one_reinsert",
           "smarter_two_exchange",
-          "smarter_three_exchange"
+          "smarter_three_exchange",
+          "take_from_dummy_place_first_suitable"
           ]
     return op
 
@@ -56,7 +58,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         usage.append(0)
         total_usage.append(0)
 
-    prev_weights = curr_weights.copy()
+    prev_weights = copy.deepcopy(curr_weights)
     end = time.time() + runtime
     its_since_upd, iteration = 0, 0
     par = parameters()
@@ -73,7 +75,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         if its_since_upd > break_its:
             break
         if its_since_upd > diversification_rate:
-            current = obo.fill_vehicles(current)
+            current = one_reinsert(current)
         if iteration % weights_refresh_rate == 0 and iteration > 0:
             prev_weights = curr_weights
             curr_weights = regulate_weights(prev_weights, curr_weights, usage)
@@ -112,6 +114,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = obo.weighted_one_insert
         elif chosen_op == "move_to_dummy":
             oc = obo.move_to_dummy
+        elif chosen_op == "take_from_dummy_place_first_suitable":
+            oc = obo.take_from_dummy_place_first_suitable
 
         op_index = operators.index(chosen_op)
         op = operator(oc, current, curr_weights, s, best, found_solutions,

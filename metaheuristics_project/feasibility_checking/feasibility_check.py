@@ -1,6 +1,7 @@
 from setup import file_handler as x
 from tools.route_handler import route_planner
 from feasibility_checking.time_calculation import time_calc
+from collections import Counter
 
 
 def check_solution(solution):
@@ -16,18 +17,25 @@ def check_solution(solution):
             # zeroes marks switch of vehicles
             if sol_call == 0:
                 current_vehicle_index += 1
-                for i in pickups:
-                    if pickups.count(i) is not 2:
-                        # print("A call is picked up, but not delivered.")
+                cnt = Counter(pickups)
+                # print("Pickups:", pickups)
+                # print("Count:", cnt)
+                for key, value in cnt.items():
+                    if value < 2:
                         return False
+
+                # for i in pickups:
+                #     if pickups.count(i) is not 2:
+                #         # print("A call is picked up, but not delivered.")
+                #         return False
                 pickups = []
                 currently_transporting_size = 0
                 continue
             pickups.append(sol_call)
             # checks for all vehicles but the dummy
             if current_vehicle_index < number_of_vehicles + 1:
-                vehicle = v.get(current_vehicle_index)
-                call = c.get(sol_call)
+                vehicle = v[current_vehicle_index]
+                call = c[sol_call]
                 # check if call is valid for the current vehicle
                 if sol_call not in vehicle.valid_calls:
                     # print("Invalid call for this vehicle.")
@@ -47,7 +55,7 @@ def check_solution(solution):
         route = route_planner(solution)
         for vehicle in v:
             total_time = time_calc(current_vehicle_index,
-                                   route.get(v.get(vehicle).vehicle_index), v, c)
+                                   route.get(v[vehicle].vehicle_index), v, c)
             current_vehicle_index += 1
             if not total_time:
                 return False

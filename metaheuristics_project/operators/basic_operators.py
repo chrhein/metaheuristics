@@ -8,23 +8,18 @@ def one_reinsert(solution):
     calls = get_calls_including_zeroes(solution)
     rand_ub = x.vehicles + 2
     rand = random.randrange(1, rand_ub)
-    one_reinsert_list = calls.get(rand)
-    if not one_reinsert_list or len(one_reinsert_list) == 1:
+    one_reinsert_list = calls[rand]
+    if len(one_reinsert_list) <= 1:
         return solution
     else:
         rand1 = random.choice(one_reinsert_list)
         if rand1 == 0:
             return solution
-        one_reinsert_list.remove(rand1)
-        one_reinsert_list.remove(rand1)
+        one_reinsert_list = [i for i in one_reinsert_list if i != rand1]
         calls[rand] = one_reinsert_list
     rand = random.randrange(1, x.vehicles)
-    if rand1 in x.vehicles_dict.get(rand).valid_calls:
-        calls[rand].insert(0, rand1)
-        calls[rand].insert(0, rand1)
-    else:
-        calls[rand_ub - 1].insert(0, rand1)
-        calls[rand_ub - 1].insert(0, rand1)
+    calls[rand].insert(0, rand1)
+    calls[rand].insert(0, rand1)
     return calls_to_solution(calls)
 
 
@@ -32,7 +27,7 @@ def two_exchange(solution):
     calls = get_calls_including_zeroes(solution)
     rand_ub = x.vehicles + 2
     rand = random.randrange(1, rand_ub)
-    two_exchange_list = calls.get(rand)
+    two_exchange_list = calls[rand]
     if len(two_exchange_list) <= 3:
         return solution
     else:

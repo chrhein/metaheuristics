@@ -14,10 +14,12 @@ def cost_calc(solution):
         route = rh.route_planner(solution)
         for vehicle in x.vehicles_dict:
             current_vehicle_index += 1
-            vehicle_route = route.get(x.vehicles_dict.get(vehicle).vehicle_index)
+            vehicle_route = route[x.vehicles_dict[vehicle].vehicle_index]
+            # vehicle_route = route.get(x.vehicles_dict.get(vehicle).vehicle_index)
             if not vehicle_route:
                 continue
-            v = x.vehicles_dict.get(current_vehicle_index)
+            v = x.vehicles_dict[current_vehicle_index]
+            # v = x.vehicles_dict.get(current_vehicle_index)
             calls_onboard = []
             origin_node = v.home_node
             rt = rh.calls_to_nodes(vehicle_route)
@@ -55,7 +57,7 @@ def cost_calc(solution):
             if i not in dummy_pus:
                 dummy_pus.append(i)
         for i in dummy_pus:
-            dummy_cost_no_transport += c.get(i).cost_no_transport
+            dummy_cost_no_transport += c[i].cost_no_transport
         total_cost += dummy_cost_no_transport
     except ValueError as v:
         total_cost = sys.maxsize * 2 + 1

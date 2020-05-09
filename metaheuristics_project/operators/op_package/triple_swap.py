@@ -32,7 +32,7 @@ def triple_swap(solution):
             continue
         new_route[rand1], new_route[rand2], new_route[rand3] = new_route[rand2], new_route[rand3], new_route[rand1]
         new_calls[vehicle] = new_route
-        if it == 250:
+        if it == 100:
             return solution
         else:
             it += 1
