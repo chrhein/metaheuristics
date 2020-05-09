@@ -5,6 +5,8 @@ from tools.route_handler import get_calls_including_zeroes, get_index_positions,
     get_routes_as_list_w_zeroes, list_to_solution
 
 
+
+
 def one_reinsert(solution):
     calls = get_routes_as_list_w_zeroes(solution)
     rand_ub = x.vehicles
@@ -21,7 +23,6 @@ def one_reinsert(solution):
     rand = random.randrange(1, x.vehicles)
     calls[rand].insert(0, rand1)
     calls[rand].insert(0, rand1)
-
     return list_to_solution(calls)
 
 

@@ -14,8 +14,8 @@ def cost_calc(solution):
         route = rh.route_planner(solution)
         for vehicle in x.vehicles_dict:
             current_vehicle_index += 1
-            vehicle_route = route[x.vehicles_dict[vehicle].vehicle_index]
-            # vehicle_route = route.get(x.vehicles_dict.get(vehicle).vehicle_index)
+            # vehicle_route = route[x.vehicles_dict[vehicle].vehicle_index]
+            vehicle_route = route.get(x.vehicles_dict.get(vehicle).vehicle_index)
             if not vehicle_route:
                 continue
             v = x.vehicles_dict[current_vehicle_index]

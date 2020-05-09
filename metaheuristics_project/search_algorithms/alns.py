@@ -13,20 +13,20 @@ from operators.best_travel_route import best_route
 from operators.handle_most_expensive import remove_most_expensive_from_dummy
 from operators.op_package.one_reinsert import smarter_one_reinsert
 from operators.op_package.swap import swap
-from operators.op_package.three_exchange import smarter_three_exchange
+from operators.op_package.three_exchange import smarter_three_exchange, fast_three_exchange
 from operators.op_package.triple_swap import triple_swap
 from operators.op_package.two_exchange import smarter_two_exchange
 from operators.try_for_best import try_for_best
 
 
 def ops():
-    op = [# "one_reinsert",
-          # "two_exchange",
-          # "three_exchange",
+    op = ["one_reinsert",
+          "two_exchange",
+          "three_exchange",
           "one_insert_most_expensive_call",
           "remove_most_expensive_from_dummy",
           "move_to_next_valid_vehicle",
-          "fill_vehicles",
+          "fill_vehicle",
           # "best_route",
           # "try_for_best",
           # "weighted_one_insert",
@@ -36,7 +36,8 @@ def ops():
           "smarter_one_reinsert",
           "smarter_two_exchange",
           "smarter_three_exchange",
-          "take_from_dummy_place_first_suitable"
+          "take_from_dummy_place_first_suitable",
+          # "fast_three_exchange"
           ]
     return op
 
@@ -86,8 +87,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = obo.move_to_next_valid_vehicle
         elif chosen_op == "try_for_best":
             oc = try_for_best
-        elif chosen_op == "fill_vehicles":
-            oc = obo.fill_vehicles
+        elif chosen_op == "fill_vehicle":
+            oc = obo.fill_vehicle
         elif chosen_op == "one_reinsert":
             oc = one_reinsert
         elif chosen_op == "two_exchange":
@@ -116,6 +117,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = obo.move_to_dummy
         elif chosen_op == "take_from_dummy_place_first_suitable":
             oc = obo.take_from_dummy_place_first_suitable
+        elif chosen_op == "fast_three_exchange":
+            oc = fast_three_exchange
 
         op_index = operators.index(chosen_op)
         op = operator(oc, current, curr_weights, s, best, found_solutions,
@@ -193,9 +196,9 @@ def get_break_its():
 
 
 def its():
-    testing_mode = False
+    testing_mode = True
     if testing_mode:
-        return 100000
+        return 500
     else:
         return get_break_its()
 
