@@ -4,7 +4,8 @@ import random
 import setup.file_handler as x
 from feasibility_checking.cost_calculation import f
 from feasibility_checking.feasibility_check import check_solution
-from tools.route_handler import get_calls_including_zeroes, get_most_expensive_calls, calls_to_solution
+from tools.route_handler import get_calls_including_zeroes, get_most_expensive_calls, calls_to_solution, \
+    get_routes_as_list_w_zeroes, list_to_solution
 
 
 def shuffle(solution):
@@ -114,34 +115,27 @@ def weighted_one_insert(solution):
 
 
 def move_to_next_valid_vehicle(solution):
-    calls = get_calls_including_zeroes(solution)
-    vehicle = random.randrange(1, x.vehicles + 2)
-    # print("Vehicle chosen:", vehicle)
-    # print("Chosen vehicle:", vehicle)
+    calls = get_routes_as_list_w_zeroes(solution)
+    vehicle = random.randrange(0, x.vehicles)
     tampered_calls = calls[vehicle]
     if not tampered_calls:
         return solution
     call = random.choice(tampered_calls)
-    # print("Chosen call:", call)
     if call == 0 or not call:
         return solution
-    # tampered_calls = [i for i in tampered_calls if i != call]
-    tampered_calls.remove(call)
-    tampered_calls.remove(call)
+    tampered_calls = [i for i in tampered_calls if i != call]
     calls[vehicle] = tampered_calls
-    vehicle = (vehicle + 1) % x.vehicles + 1
-    # print("Chosen vehicle:", vehicle)
-
+    vehicle = vehicle % x.vehicles + 1
     tampered_calls = calls[vehicle]
     tampered_calls.insert(0, call)
     tampered_calls.insert(0, call)
     calls[vehicle] = tampered_calls
-    return calls_to_solution(calls)
+    return list_to_solution(calls)
 
 
 def move_to_dummy(solution):
-    calls = get_calls_including_zeroes(solution)
-    vehicle = random.randrange(1, x.vehicles + 2)
+    calls = get_routes_as_list_w_zeroes(solution)
+    vehicle = random.randrange(0, x.vehicles)
     tampered_calls = calls[vehicle]
     if not tampered_calls:
         return solution
@@ -152,9 +146,9 @@ def move_to_dummy(solution):
     tampered_calls.remove(call)
     tampered_calls.remove(call)
     calls[vehicle] = tampered_calls
-    vehicle = x.vehicles + 1
+    vehicle = x.vehicles
     tampered_calls = calls[vehicle]
     tampered_calls.insert(0, call)
     tampered_calls.insert(0, call)
     calls[vehicle] = tampered_calls
-    return calls_to_solution(calls)
+    return list_to_solution(calls)

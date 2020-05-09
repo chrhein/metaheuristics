@@ -83,4 +83,35 @@ def calls_to_solution(calls_dict):
     return new_solution
 
 
+def list_to_solution(calls_list):
+    new_solution = []
+    for val in calls_list:
+        for call in val:
+            new_solution.append(call)
+    return new_solution
 
+
+def get_routes_as_list(solution):
+    vehicles = []
+    route = []
+    for i in range(len(solution)):
+        if solution[i] == 0:
+            vehicles.append(route)
+            route = []
+        else:
+            route.append(solution[i])
+    return vehicles
+
+
+def get_routes_as_list_w_zeroes(solution):
+    vehicles = []
+    route = []
+    for i in range(len(solution)):
+        if solution[i] == 0:
+            route.append(solution[i])
+            vehicles.append(route)
+            route = []
+        else:
+            route.append(solution[i])
+    vehicles.append(route)
+    return vehicles

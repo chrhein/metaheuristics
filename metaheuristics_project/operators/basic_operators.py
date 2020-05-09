@@ -1,13 +1,14 @@
 import random
 
 from setup import file_handler as x
-from tools.route_handler import get_calls_including_zeroes, get_index_positions, calls_to_solution
+from tools.route_handler import get_calls_including_zeroes, get_index_positions, calls_to_solution, \
+    get_routes_as_list_w_zeroes, list_to_solution
 
 
 def one_reinsert(solution):
-    calls = get_calls_including_zeroes(solution)
-    rand_ub = x.vehicles + 2
-    rand = random.randrange(1, rand_ub)
+    calls = get_routes_as_list_w_zeroes(solution)
+    rand_ub = x.vehicles
+    rand = random.randrange(0, rand_ub)
     one_reinsert_list = calls[rand]
     if len(one_reinsert_list) <= 1:
         return solution
@@ -20,13 +21,14 @@ def one_reinsert(solution):
     rand = random.randrange(1, x.vehicles)
     calls[rand].insert(0, rand1)
     calls[rand].insert(0, rand1)
-    return calls_to_solution(calls)
+
+    return list_to_solution(calls)
 
 
 def two_exchange(solution):
-    calls = get_calls_including_zeroes(solution)
-    rand_ub = x.vehicles + 2
-    rand = random.randrange(1, rand_ub)
+    calls = get_routes_as_list_w_zeroes(solution)
+    rand_ub = x.vehicles
+    rand = random.randrange(0, rand_ub)
     two_exchange_list = calls[rand]
     if len(two_exchange_list) <= 3:
         return solution
@@ -43,15 +45,15 @@ def two_exchange(solution):
         two_exchange_list[rand1_indexes[1]], two_exchange_list[rand2_indexes[1]] = \
             two_exchange_list[rand2_indexes[1]], two_exchange_list[rand1_indexes[1]]
         calls[rand] = two_exchange_list
-    return calls_to_solution(calls)
+    return list_to_solution(calls)
 
 
 def three_exchange(solution):
-    calls = get_calls_including_zeroes(solution)
-    rand_ub = x.vehicles + 2
-    rand = random.randrange(1, rand_ub)
-    three_exchange_list = calls.get(rand)
-    if len(three_exchange_list) <= 6:
+    calls = get_routes_as_list_w_zeroes(solution)
+    rand_ub = x.vehicles
+    rand = random.randrange(0, rand_ub)
+    three_exchange_list = calls[rand]
+    if len(three_exchange_list) < 6:
         return solution
     else:
         rand1 = random.choice(three_exchange_list)
@@ -73,4 +75,4 @@ def three_exchange(solution):
                                 three_exchange_list[rand1_indexes[1]]
 
         calls[rand] = three_exchange_list
-    return calls_to_solution(calls)
+    return list_to_solution(calls)

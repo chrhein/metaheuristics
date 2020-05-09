@@ -30,7 +30,7 @@ def ops():
           # "best_route",
           # "try_for_best",
           # "weighted_one_insert",
-          "move_to_dummy",
+          # "move_to_dummy",
           "swap",
           "triple_swap",
           "smarter_one_reinsert",
