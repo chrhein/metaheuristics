@@ -1,5 +1,5 @@
 from setup import file_handler as x
-from tools.route_handler import route_planner
+from tools.route_handler import route_planner, get_routes_as_list
 from feasibility_checking.time_calculation import time_calc
 from collections import Counter
 
@@ -52,10 +52,10 @@ def check_solution(solution):
                     currently_transporting.remove(sol_call)
                     currently_transporting_size -= call.size
         current_vehicle_index = 1
-        route = route_planner(solution)
+        route = get_routes_as_list(solution)
         for vehicle in v:
             total_time = time_calc(current_vehicle_index,
-                                   route.get(v[vehicle].vehicle_index), v, c)
+                                   route[v[vehicle].vehicle_index-1], v, c)
             current_vehicle_index += 1
             if not total_time:
                 return False

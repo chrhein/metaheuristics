@@ -13,6 +13,9 @@ def alns_init(init_solution, times, runtime):
 
     print("\nInitial solution:", init_solution)
     print("\nCost of initial solution:", cost_init, "\n")
+
+    print("######################################################################\n")
+
     total_cost = 0
     best_solution = init_solution
     best_objective = cost_init
@@ -29,9 +32,17 @@ def alns_init(init_solution, times, runtime):
         total_cost += cost
         iter_end_time = dt.datetime.now()
         iter_total_runtime = (iter_end_time - iter_start_time).total_seconds()
+        if times > 1:
+            print("Stats for run %d:\n" % (i + 1))
+            print("Objective: %.2d" % round(cost, 0))
+            improvement = 100 * (cost_init - cost) / cost_init
+            print("Improvement: %.2f" % round(improvement, 2))
+            print("Runtime: " + "%.6f" % iter_total_runtime + " seconds\n")
         if iter_total_runtime < best_runtime:
             best_runtime = iter_total_runtime
+        print("######################################################################\n")
 
+    print("Stats for all runs:\n")
     p(start, total_cost, times, cost_init,
       best_objective, best_runtime, best_solution)
     print("--- End of Adaptive Large Neighborhood Search ---")

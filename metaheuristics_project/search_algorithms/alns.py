@@ -75,7 +75,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         current = s
         if its_since_upd > break_its:
             break
-        if its_since_upd % diversification_rate == 0:
+        if its_since_upd > diversification_rate:
             current = fast_reinsert(current)
         if iteration % weights_refresh_rate == 0 and iteration > 0:
             prev_weights = curr_weights
@@ -198,7 +198,7 @@ def get_break_its():
 def its():
     testing_mode = True
     if testing_mode:
-        return 1000
+        return 2500
     else:
         return get_break_its()
 
@@ -207,6 +207,6 @@ def parameters():
     temperature, cooling_rate = 100, 0.998
     t = temperature
     weights_refresh_rate = 250
-    diversification_rate = 10
+    diversification_rate = 100
     return [temperature, t, cooling_rate, weights_refresh_rate, diversification_rate]
 

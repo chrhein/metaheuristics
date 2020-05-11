@@ -9,7 +9,7 @@ from setup.file_handler import get_runtime
 
 def main():
     init_solution = solution_generator()
-    times = 1
+    times = 10
     runtime = get_runtime()
     # r = runtime - 0.005
     r = runtime
@@ -19,7 +19,7 @@ def main():
     # simulated_annealing_initializer(init_solution, times)
     # new_simulated_annealing_initializer(init_solution, times)
 
-    print("\nRuntime:", runtime, "\n")
+    print("\nMaximum runtime:", runtime, "seconds.\n")
     alns_init(init_solution, times, r)
 
 

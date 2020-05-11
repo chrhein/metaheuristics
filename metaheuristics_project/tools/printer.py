@@ -17,3 +17,5 @@ def p(start, total_cost, times, cost_init,
     print("Best solution:", best_solution)
 
     print("\nCompleted in " + "%.6f" % total_runtime + " seconds. \n")
+    print("######################################################################\n")
+
