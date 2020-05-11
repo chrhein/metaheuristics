@@ -56,23 +56,22 @@ def fill_vehicles(solution):
 
 
 def take_from_dummy_place_first_suitable(solution):
-    calls = get_calls_including_zeroes(solution)
-    dummy_calls = calls[x.vehicles + 1]
+    calls = get_routes_as_list_w_zeroes(solution)
+    dummy_calls = calls[x.vehicles]
     if not dummy_calls:
         return solution
     call = random.choice(dummy_calls)
     dummy_removed = [i for i in dummy_calls if i != call]
-    calls[x.vehicles + 1] = dummy_removed
-    vehicle = random.randrange(1, x.vehicles)
+    calls[x.vehicles] = dummy_removed
+    vehicle = random.randrange(0, x.vehicles-1)
     calls[vehicle].insert(random.randrange(0, len(calls[vehicle])), call)
     calls[vehicle].insert(random.randrange(0, len(calls[vehicle])), call)
-    # print(calls_to_solution(calls))
-    return calls_to_solution(calls)
+    return list_to_solution(calls)
 
 
 def fill_vehicle(solution):
-    calls = get_calls_including_zeroes(solution)
-    dummy_calls = calls[x.vehicles + 1]
+    calls = get_routes_as_list_w_zeroes(solution)
+    dummy_calls = calls[x.vehicles]
     if not dummy_calls:
         return solution
     call = random.choice(dummy_calls)
@@ -81,9 +80,9 @@ def fill_vehicle(solution):
             calls[vehicle].insert(0, call)
             calls[vehicle].insert(0, call)
             dummy_removed = [i for i in dummy_calls if i != call]
-            calls[x.vehicles + 1] = dummy_removed
+            calls[x.vehicles] = dummy_removed
             break
-    return calls_to_solution(calls)
+    return list_to_solution(calls)
 
 
 def weighted_one_insert(solution):

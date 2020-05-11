@@ -23,7 +23,7 @@ def ops():
     op = ["remove_most_expensive_from_dummy",
           "fill_vehicle",
           "weighted_one_insert",
-          "move_to_dummy",
+          # "move_to_dummy",
           "swap",
           "triple_swap",
           "smarter_one_reinsert",
@@ -97,8 +97,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = remove_most_expensive_from_dummy
         elif chosen_op == "weighted_one_insert":
             oc = obo.weighted_one_insert
-        elif chosen_op == "move_to_dummy":
-            oc = obo.move_to_dummy
+        # elif chosen_op == "move_to_dummy":
+        #     oc = obo.move_to_dummy
         elif chosen_op == "one_insert_most_expensive_call":
             oc = obo.one_insert_most_expensive_call
 
