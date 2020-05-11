@@ -19,7 +19,7 @@ def alns_init(init_solution, times, runtime):
     total_cost = 0
     best_solution = init_solution
     best_objective = cost_init
-    best_runtime = sys.maxsize
+    best_runtime = 100000
     start = dt.datetime.now()
     for i in range(times):
         print("Run %d of %d. \n" % (i + 1, times))
