@@ -88,7 +88,6 @@ def fill_vehicle(solution):
 
 def weighted_one_insert(solution):
     new_sol = one_reinsert(solution)
-    print(solution, new_sol)
     if check_solution(new_sol) and f(new_sol) < f(solution):
         return new_sol
     return solution

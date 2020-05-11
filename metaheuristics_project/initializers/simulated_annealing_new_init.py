@@ -6,7 +6,7 @@ from search_algorithms.simulated_annealing_new import simulated_annealing_new
 from tools.printer import p
 
 
-def new_simulated_annealing_initializer(init_solution, times):
+def new_simulated_annealing_initializer(init_solution, times, runtime):
     print("--- Running New Simulated Annealing Algorithm ---")
 
     cost_init = f(init_solution)
@@ -21,7 +21,7 @@ def new_simulated_annealing_initializer(init_solution, times):
     for i in range(times):
         print("Run %d of %d. \n" % (i + 1, times))
         iter_start_time = dt.datetime.now()
-        new_solution = simulated_annealing_new(init_solution)
+        new_solution = simulated_annealing_new(init_solution, runtime)
         cost = f(new_solution)
         if cost < best_objective:
             best_objective = cost

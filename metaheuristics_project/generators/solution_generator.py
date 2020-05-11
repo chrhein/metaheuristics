@@ -1,4 +1,4 @@
-from feasibility_checking.cost_calculation import cost_calc
+from feasibility_checking.cost_calculation import total_cost_calc
 from feasibility_checking.feasibility_check import check_solution
 from setup import file_handler as x
 
@@ -24,7 +24,7 @@ def valid_solution_test():
 
     for i in valid_solutions:
         print("Solution:", i)
-        print("Total cost:", cost_calc(i))
+        print("Total cost:", total_cost_calc(i))
         print("Valid:", check_solution(i), "\n")
 
     # valid_solution = [22, 22, 33, 33, 0, 12, 5, 5, 29, 8, 8, 29, 12, 27, 27, 26, 26, 0, 7, 13, 13, 7, 16, 16, 11, 11,

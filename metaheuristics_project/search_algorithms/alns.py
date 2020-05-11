@@ -11,7 +11,7 @@ from feasibility_checking.feasibility_check import check_solution
 from operators.basic_operators import three_exchange, one_reinsert, two_exchange
 from operators.best_travel_route import best_route
 from operators.handle_most_expensive import remove_most_expensive_from_dummy
-from operators.op_package.one_reinsert import smarter_one_reinsert
+from operators.op_package.one_reinsert import smarter_one_reinsert, fast_reinsert
 from operators.op_package.swap import swap
 from operators.op_package.three_exchange import smarter_three_exchange, fast_three_exchange
 from operators.op_package.triple_swap import triple_swap
@@ -28,9 +28,9 @@ def ops():
           "move_to_next_valid_vehicle",
           "fill_vehicle",
           # "best_route",
-          # "try_for_best",
-          # "weighted_one_insert",
-          # "move_to_dummy",
+          "try_for_best",
+          "weighted_one_insert",
+          "move_to_dummy",
           "swap",
           "triple_swap",
           "smarter_one_reinsert",
@@ -75,8 +75,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         current = s
         if its_since_upd > break_its:
             break
-        if its_since_upd > diversification_rate:
-            current = one_reinsert(current)
+        if its_since_upd % diversification_rate == 0:
+            current = fast_reinsert(current)
         if iteration % weights_refresh_rate == 0 and iteration > 0:
             prev_weights = curr_weights
             curr_weights = regulate_weights(prev_weights, curr_weights, usage)
@@ -188,17 +188,17 @@ def operator(op, curr_sol, curr_weights, s, best, found, index, usage, variable)
 def get_break_its():
     calls = x.calls
     if calls < 10:
-        return 5000
+        return 2500
     elif calls < 50:
-        return 15000
+        return 5000
     else:
-        return 25000
+        return 10000
 
 
 def its():
     testing_mode = True
     if testing_mode:
-        return 500
+        return 1000
     else:
         return get_break_its()
 
@@ -207,6 +207,6 @@ def parameters():
     temperature, cooling_rate = 100, 0.998
     t = temperature
     weights_refresh_rate = 250
-    diversification_rate = 50
+    diversification_rate = 10
     return [temperature, t, cooling_rate, weights_refresh_rate, diversification_rate]
 

@@ -11,7 +11,9 @@ def fast_reinsert(solution):
     new_s = [i for i in solution if i != rand]
     new_s.insert(random.randrange(0, len(solution)), rand)
     new_s.insert(random.randrange(0, len(solution)), rand)
-    return new_s
+    if check_solution(new_s):
+        return new_s
+    return solution
 
 
 def smarter_one_reinsert(solution):
