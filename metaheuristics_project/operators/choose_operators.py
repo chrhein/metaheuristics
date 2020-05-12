@@ -1,6 +1,6 @@
 def ops():
     op = ["remove_most_expensive_from_dummy",
-          "fill_vehicle",
+          # "fill_vehicle",
           "weighted_one_insert",
           # "move_to_dummy",
           "swap",

@@ -24,6 +24,7 @@ from operators.try_for_best import try_for_best
 def adaptive_large_neighborhood_search(init_solution, runtime):
     s = init_solution
     best = init_solution
+    best_cost = f(best)
     global found_solutions
 
     operators = ops()
@@ -37,7 +38,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         usage.append(0)
         total_usage.append(0)
 
-    prev_weights = copy.deepcopy(curr_weights)
+    prev_weights = curr_weights.copy()
     end = time.time() + runtime
     its_since_upd, iteration = 0, 0
     par = parameters()
@@ -49,14 +50,13 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     diversification_rate = par[4]
 
     while time.time() < end:
-        iteration += 1
-        current = s
-
         if its_since_upd > break_its:
             break
 
-        if its_since_upd > diversification_rate:
+        if its_since_upd % diversification_rate == 0:
             current = pseudo_random_one_reinsert(s)
+        else:
+            current = s
 
         if iteration % weights_refresh_rate == 0 and iteration > 0:
             prev_weights = curr_weights
@@ -109,14 +109,19 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         rand_ii = random.uniform(0, 1)
         p = math.e * (-delta_e / t)
 
-        if (check_solution(current) and delta_e < 0) or (check_solution(current) and rand_ii < p):
+        if check_solution(current) and delta_e < 0:
             s = current
             its_since_upd = 0
-            if f(s) < f(best):
+            if f(s) < best_cost:
                 best = s
+                best_cost = f(best)
+        elif check_solution(current) and rand_ii < p:
+            s = current
+            its_since_upd = 0
         else:
             its_since_upd += 1
         t = a * t0
+        iteration += 1
 
     usage_dict = {}
 
@@ -136,14 +141,15 @@ found_solutions = set()
 
 def update_weights(current, s, best, weights, index):
     if check_solution(current):
-        if f(current) < f(s):
+        curr_cost = f(current)
+        if curr_cost < f(s):
             weights[index] += 1
         global found_solutions
         t = hash(tuple(current))
         if t not in found_solutions:
             weights[index] += 2
             found_solutions.add(t)
-        if f(current) < f(best):
+        if curr_cost < f(best):
             weights[index] += 4
     return weights
 
@@ -185,6 +191,6 @@ def parameters():
     temperature, cooling_rate = 1000, 0.998
     t = temperature
     weights_refresh_rate = 100
-    diversification_rate = 250
+    diversification_rate = 10
     return [temperature, t, cooling_rate, weights_refresh_rate, diversification_rate]
 
