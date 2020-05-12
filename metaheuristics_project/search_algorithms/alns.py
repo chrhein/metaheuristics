@@ -11,11 +11,11 @@ from feasibility_checking.feasibility_check import check_solution
 from operators.basic_operators import three_exchange, one_reinsert, two_exchange
 from operators.best_travel_route import best_route
 from operators.handle_most_expensive import remove_most_expensive_from_dummy
-from operators.op_package.one_reinsert import smarter_one_reinsert, fast_reinsert
+from operators.op_package.one_reinsert import pseudo_random_one_reinsert, fast_reinsert
 from operators.op_package.swap import swap
-from operators.op_package.three_exchange import smarter_three_exchange, fast_three_exchange
+from operators.op_package.three_exchange import pseudo_random_three_exchange, fast_three_exchange
 from operators.op_package.triple_swap import triple_swap
-from operators.op_package.two_exchange import smarter_two_exchange
+from operators.op_package.two_exchange import pseudo_random_two_exchange
 from operators.try_for_best import try_for_best
 
 
@@ -26,11 +26,17 @@ def ops():
           # "move_to_dummy",
           "swap",
           "triple_swap",
-          "smarter_one_reinsert",
-          "smarter_two_exchange",
-          "smarter_three_exchange",
+          # "pseudo_random_one_reinsert",
+          "pseudo_random_two_exchange",
+          "pseudo_random_three_exchange",
           "take_from_dummy_place_first_suitable",
-          "one_insert_most_expensive_call"]
+          "one_insert_most_expensive_call",
+          # "two_exchange",
+          # "three_exchange",
+          "move_vehicle_to_dummy",
+          "move_to_next_valid_vehicle",
+          "change_route"
+          ]
     return op
 
 
@@ -38,7 +44,6 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     s = init_solution
     best = init_solution
     global found_solutions
-    found_solutions.add(tuple(init_solution))
 
     operators = ops()
     break_its = its()
@@ -55,29 +60,29 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     end = time.time() + runtime
     its_since_upd, iteration = 0, 0
     par = parameters()
+
     t0 = par[0]
     t = par[1]
     a = par[2]
     weights_refresh_rate = par[3]
     diversification_rate = par[4]
+
     while time.time() < end:
         iteration += 1
         current = s
+
         if its_since_upd > break_its:
             break
+
         if its_since_upd > diversification_rate:
-            rand1 = random.randrange(0, 3)
-            if rand1 == 0:
-                current = one_reinsert(current)
-            if rand1 == 1:
-                current = two_exchange(current)
-            if rand1 == 2:
-                current = three_exchange(current)
+            current = pseudo_random_one_reinsert(s)
+
         if iteration % weights_refresh_rate == 0 and iteration > 0:
             prev_weights = curr_weights
             curr_weights = regulate_weights(prev_weights, curr_weights, usage)
             for i in range(len(operators)):
                 usage[i] = 0
+
         chosen_op = random.choices(operators, prev_weights, k=1).pop(0)
         if chosen_op == "take_from_dummy_place_first_suitable":
             oc = obo.take_from_dummy_place_first_suitable
@@ -87,20 +92,30 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = swap
         elif chosen_op == "triple_swap":
             oc = triple_swap
-        elif chosen_op == "smarter_one_reinsert":
-            oc = smarter_one_reinsert
-        elif chosen_op == "smarter_two_exchange":
-            oc = smarter_two_exchange
-        elif chosen_op == "smarter_three_exchange":
-            oc = smarter_three_exchange
+        elif chosen_op == "pseudo_random_one_reinsert":
+            oc = pseudo_random_one_reinsert
+        elif chosen_op == "pseudo_random_two_exchange":
+            oc = pseudo_random_two_exchange
+        elif chosen_op == "pseudo_random_three_exchange":
+            oc = pseudo_random_three_exchange
         elif chosen_op == "remove_most_expensive_from_dummy":
             oc = remove_most_expensive_from_dummy
         elif chosen_op == "weighted_one_insert":
             oc = obo.weighted_one_insert
-        # elif chosen_op == "move_to_dummy":
-        #     oc = obo.move_to_dummy
+        elif chosen_op == "move_to_dummy":
+            oc = obo.move_to_dummy
         elif chosen_op == "one_insert_most_expensive_call":
             oc = obo.one_insert_most_expensive_call
+        elif chosen_op == "two_exchange":
+            oc = two_exchange
+        elif chosen_op == "three_exchange":
+            oc = three_exchange
+        elif chosen_op == "move_vehicle_to_dummy":
+            oc = obo.move_vehicle_to_dummy
+        elif chosen_op == "move_to_next_valid_vehicle":
+            oc = obo.move_to_next_valid_vehicle
+        elif chosen_op == "change_route":
+            oc = obo.change_route
 
         op_index = operators.index(chosen_op)
         op = operator(oc, current, curr_weights, s, best,
@@ -111,19 +126,17 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         rand_ii = random.uniform(0, 1)
         p = math.e * (-delta_e / t)
 
-        if check_solution(current) and delta_e < 0:
+        if (check_solution(current) and delta_e < 0) or (check_solution(current) and rand_ii < p):
             s = current
             its_since_upd = 0
             if f(s) < f(best):
                 best = s
-        elif check_solution(current) and rand_ii < p:
-            s = current
-            its_since_upd = 0
         else:
             its_since_upd += 1
         t = a * t0
 
     usage_dict = {}
+
     for i in range(len(operators)):
         usage_dict[operators[i]] = total_usage[i]
 
@@ -131,8 +144,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
 
     for key, value in u_d.items():
         print("%d: %s" % (value, key))
-
-    print()
+    print("\nTotal iterations:", iteration, "\n")
     return best
 
 
@@ -144,9 +156,10 @@ def update_weights(current, s, best, weights, index):
         if f(current) < f(s):
             weights[index] += 1
             global found_solutions
-            if tuple(current) not in found_solutions:
-                weights[index] += 2
-                found_solutions.add(tuple(current))
+        t = hash(tuple(current))
+        if t not in found_solutions:
+            weights[index] += 2
+            found_solutions.add(t)
         if f(current) < f(best):
             weights[index] += 4
     return weights
@@ -180,7 +193,7 @@ def get_break_its():
 def its():
     testing_mode = True
     if testing_mode:
-        return 1000
+        return 2500
     else:
         return get_break_its()
 
@@ -190,6 +203,5 @@ def parameters():
     t = temperature
     weights_refresh_rate = 100
     diversification_rate = 100
-    reset_time = 1
-    return [temperature, t, cooling_rate, weights_refresh_rate, diversification_rate, reset_time]
+    return [temperature, t, cooling_rate, weights_refresh_rate, diversification_rate]
 

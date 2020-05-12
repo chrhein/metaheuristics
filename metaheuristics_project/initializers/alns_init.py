@@ -1,6 +1,5 @@
 import datetime as dt
-import sys
-
+from setup import file_handler as x
 from feasibility_checking.cost_calculation import f
 from search_algorithms.alns import adaptive_large_neighborhood_search
 from tools.printer import p
@@ -44,11 +43,11 @@ def alns_init(init_solution, times, runtime):
             print("Runtime:         " + "%.6f" % iter_total_runtime + " seconds\n")
         if iter_total_runtime < best_runtime:
             best_runtime = iter_total_runtime
-        elif iter_total_runtime > worst_runtime:
+        if iter_total_runtime > worst_runtime:
             worst_runtime = iter_total_runtime
         print("######################################################################\n")
 
-    print("Stats for all runs:\n")
+    print("Stats for Call %d:\n" % x.calls)
     p(start, total_cost, times, cost_init,
       best_objective, worst_objective, best_runtime, worst_runtime, best_solution)
     print("--- End of Adaptive Large Neighborhood Search ---")

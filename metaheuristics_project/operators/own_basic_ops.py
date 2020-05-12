@@ -10,11 +10,7 @@ from tools.route_handler import get_calls_including_zeroes, get_most_expensive_c
 
 
 def shuffle(solution):
-    new_s = copy.deepcopy(solution)
-    for _ in range(1000):
-        random.shuffle(new_s)
-        if check_solution(new_s):
-            return new_s
+    random.shuffle(solution)
     return solution
 
 
@@ -92,6 +88,19 @@ def weighted_one_insert(solution):
     return solution
 
 
+def change_route(solution):
+    calls = get_routes_as_list_w_zeroes(solution)
+    vehicle = random.randrange(0, x.vehicles-1)
+    c = calls[vehicle]
+    del c[-1]
+    len_c = len(c)
+    if not c:
+        return solution
+    c.insert(random.randrange(0, len_c), c.pop(random.randrange(0, len_c)))
+    c.append(0)
+    return list_to_solution(calls)
+
+
 def move_to_next_valid_vehicle(solution):
     calls = get_routes_as_list_w_zeroes(solution)
     vehicle = random.randrange(0, x.vehicles)
@@ -104,10 +113,26 @@ def move_to_next_valid_vehicle(solution):
     tampered_calls = [i for i in tampered_calls if i != call]
     calls[vehicle] = tampered_calls
     vehicle = vehicle % x.vehicles
+    del calls[vehicle][-1]
     tampered_calls = calls[vehicle]
-    tampered_calls.insert(0, call)
-    tampered_calls.insert(0, call)
+    if len(tampered_calls) < 1:
+        tampered_calls.insert(0, call)
+        tampered_calls.insert(0, call)
+    else:
+        tampered_calls.insert(random.randrange(0, len(tampered_calls)), call)
+        tampered_calls.insert(random.randrange(0, len(tampered_calls)), call)
+    calls[vehicle].append(0)
     calls[vehicle] = tampered_calls
+    return list_to_solution(calls)
+
+
+def move_vehicle_to_dummy(solution):
+    calls = get_routes_as_list_w_zeroes(solution)
+    dummy = x.vehicles
+    vehicle = random.randrange(0, dummy-1)
+    del calls[vehicle][-1]
+    calls[dummy].extend(calls[vehicle])
+    calls[vehicle] = [0]
     return list_to_solution(calls)
 
 

@@ -1,9 +1,8 @@
 import random
 
-from setup import file_handler as x
 from feasibility_checking.cost_calculation import f
 from feasibility_checking.feasibility_check import check_solution
-from operators.basic_operators import one_reinsert
+from setup import file_handler as x
 
 
 def fast_reinsert(solution):
@@ -16,14 +15,14 @@ def fast_reinsert(solution):
     return solution
 
 
-def smarter_one_reinsert(solution):
-    new_sol = fast_reinsert(solution)
-    for i in range(0, 50):
-        if f(new_sol) < f(solution):
-            if check_solution(new_sol):
-                break
-    new_sol = fast_reinsert(new_sol)
-    if check_solution(new_sol):
-        return new_sol
-    else:
-        return solution
+def pseudo_random_one_reinsert(solution):
+    best_solution = solution
+    best = f(solution)
+    for _ in range(15):
+        new_sol = fast_reinsert(solution)
+        f_new = f(new_sol)
+        score = f_new
+        if f_new < best:
+            best_solution = new_sol
+            best = score
+    return best_solution

@@ -86,8 +86,9 @@ def calls_to_solution(calls_dict):
 def list_to_solution(calls_list):
     new_solution = []
     for val in calls_list:
-        for call in val:
-            new_solution.append(call)
+        new_solution.extend(val)
+        # for call in val:
+        #     new_solution.append(call)
     return new_solution
 
 

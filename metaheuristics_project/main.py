@@ -11,7 +11,7 @@ def main():
     init_solution = solution_generator()
     times = 5
     runtime = get_runtime()
-    r = runtime - 0.005
+    r = runtime - 0.01
     # r = runtime
 
     # random_solution_initializer(init_solution, times)
