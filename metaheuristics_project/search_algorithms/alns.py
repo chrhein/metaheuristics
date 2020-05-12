@@ -10,34 +10,15 @@ from feasibility_checking.cost_calculation import f
 from feasibility_checking.feasibility_check import check_solution
 from operators.basic_operators import three_exchange, one_reinsert, two_exchange
 from operators.best_travel_route import best_route
+from operators.choose_operators import ops
 from operators.handle_most_expensive import remove_most_expensive_from_dummy
 from operators.op_package.one_reinsert import pseudo_random_one_reinsert, fast_reinsert
+from operators.op_package.shuffle import shuffle
 from operators.op_package.swap import swap
 from operators.op_package.three_exchange import pseudo_random_three_exchange, fast_three_exchange
 from operators.op_package.triple_swap import triple_swap
 from operators.op_package.two_exchange import pseudo_random_two_exchange
 from operators.try_for_best import try_for_best
-
-
-def ops():
-    op = ["remove_most_expensive_from_dummy",
-          "fill_vehicle",
-          "weighted_one_insert",
-          # "move_to_dummy",
-          "swap",
-          "triple_swap",
-          # "pseudo_random_one_reinsert",
-          "pseudo_random_two_exchange",
-          "pseudo_random_three_exchange",
-          "take_from_dummy_place_first_suitable",
-          "one_insert_most_expensive_call",
-          # "two_exchange",
-          # "three_exchange",
-          "move_vehicle_to_dummy",
-          "move_to_next_valid_vehicle",
-          "change_route"
-          ]
-    return op
 
 
 def adaptive_large_neighborhood_search(init_solution, runtime):
@@ -116,6 +97,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = obo.move_to_next_valid_vehicle
         elif chosen_op == "change_route":
             oc = obo.change_route
+        elif chosen_op == "shuffle":
+            oc = shuffle
 
         op_index = operators.index(chosen_op)
         op = operator(oc, current, curr_weights, s, best,
@@ -155,7 +138,7 @@ def update_weights(current, s, best, weights, index):
     if check_solution(current):
         if f(current) < f(s):
             weights[index] += 1
-            global found_solutions
+        global found_solutions
         t = hash(tuple(current))
         if t not in found_solutions:
             weights[index] += 2
@@ -183,7 +166,7 @@ def operator(op, curr_sol, curr_weights, s, best, index, usage, variable):
 def get_break_its():
     calls = x.calls
     if calls < 10:
-        return 2500
+        return 1500
     elif calls < 50:
         return 5000
     else:
@@ -191,9 +174,9 @@ def get_break_its():
 
 
 def its():
-    testing_mode = True
+    testing_mode = False
     if testing_mode:
-        return 2500
+        return 1500
     else:
         return get_break_its()
 
@@ -202,6 +185,6 @@ def parameters():
     temperature, cooling_rate = 1000, 0.998
     t = temperature
     weights_refresh_rate = 100
-    diversification_rate = 100
+    diversification_rate = 250
     return [temperature, t, cooling_rate, weights_refresh_rate, diversification_rate]
 

@@ -9,11 +9,6 @@ from tools.route_handler import get_calls_including_zeroes, get_most_expensive_c
     get_routes_as_list_w_zeroes, list_to_solution
 
 
-def shuffle(solution):
-    random.shuffle(solution)
-    return solution
-
-
 def one_insert_most_expensive_call(solution):
     calls = get_calls_including_zeroes(solution)
     if not calls[x.vehicles + 1]:
