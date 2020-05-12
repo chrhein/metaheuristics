@@ -23,12 +23,13 @@ from operators.try_for_best import try_for_best
 
 def adaptive_large_neighborhood_search(init_solution, runtime):
     s = init_solution
+    s_cost = f(s)
     best = init_solution
     best_cost = f(best)
     global found_solutions
 
     operators = ops()
-    break_its = its()
+    break_its = its_without_updates_break()
     curr_weights = []
     usage = []
     total_usage = []
@@ -40,7 +41,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
 
     prev_weights = curr_weights.copy()
     end = time.time() + runtime
-    its_since_upd, iteration = 0, 0
+    its_since_upd, iteration, diversification_its = 0, 0, 0
     par = parameters()
 
     t0 = par[0]
@@ -53,8 +54,10 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         if its_since_upd > break_its:
             break
 
-        if its_since_upd % diversification_rate == 0:
+        if its_since_upd > diversification_rate:
             current = pseudo_random_one_reinsert(s)
+            # print("New solution:", current)
+            diversification_its += 1
         else:
             current = s
 
@@ -101,18 +104,19 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = shuffle
 
         op_index = operators.index(chosen_op)
-        op = operator(oc, current, curr_weights, s, best,
-                      op_index, usage, total_usage[op_index])
-        current, curr_weights, usage, total_usage[op_index] = op[0], op[1], op[2], op[3]
+        op = operator(oc, current, curr_weights,
+                      op_index, usage, total_usage[op_index], s_cost, best_cost)
+        current, curr_weights, usage, total_usage[op_index], f_curr = op[0], op[1], op[2], op[3], op[4]
 
-        delta_e = f(current) - f(s)
+        delta_e = f_curr - s_cost
         rand_ii = random.uniform(0, 1)
         p = math.e * (-delta_e / t)
 
         if check_solution(current) and delta_e < 0:
             s = current
+            s_cost = f(s)
             its_since_upd = 0
-            if f(s) < best_cost:
+            if s_cost < best_cost:
                 best = s
                 best_cost = f(best)
         elif check_solution(current) and rand_ii < p:
@@ -120,6 +124,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             its_since_upd = 0
         else:
             its_since_upd += 1
+
         t = a * t0
         iteration += 1
 
@@ -132,25 +137,25 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
 
     for key, value in u_d.items():
         print("%d: %s" % (value, key))
+    print("\n%d: pseudo_random_one_reinsert" % diversification_its)
     print("\nTotal iterations:", iteration, "\n")
+
     return best
 
 
 found_solutions = set()
 
 
-def update_weights(current, s, best, weights, index):
-    if check_solution(current):
-        curr_cost = f(current)
-        if curr_cost < f(s):
-            weights[index] += 1
-        global found_solutions
-        t = hash(tuple(current))
-        if t not in found_solutions:
-            weights[index] += 2
-            found_solutions.add(t)
-        if curr_cost < f(best):
-            weights[index] += 4
+def update_weights(current, weights, index, f_curr, f_s, f_best):
+    if f_curr < f_s:
+        weights[index] += 1
+    global found_solutions
+    t = hash(tuple(current))
+    if t not in found_solutions:
+        weights[index] += 2
+        found_solutions.add(t)
+    if f_curr < f_best:
+        weights[index] += 4
     return weights
 
 
@@ -161,12 +166,13 @@ def regulate_weights(prev, curr, usage):
     return new_curr
 
 
-def operator(op, curr_sol, curr_weights, s, best, index, usage, variable):
+def operator(op, curr_sol, curr_weights, index, usage, variable, f_s, f_best):
     current = op(curr_sol)
-    curr_weights = update_weights(current, s, best, curr_weights, index)
+    f_curr = f(current)
+    curr_weights = update_weights(current, curr_weights, index, f_curr, f_s, f_best)
     usage[index] += 1
     variable += 1
-    return [current, curr_weights, usage, variable]
+    return [current, curr_weights, usage, variable, f_curr]
 
 
 def get_break_its():
@@ -179,10 +185,10 @@ def get_break_its():
         return 10000
 
 
-def its():
-    testing_mode = False
+def its_without_updates_break():
+    testing_mode = True
     if testing_mode:
-        return 1500
+        return 1000
     else:
         return get_break_its()
 
@@ -190,7 +196,7 @@ def its():
 def parameters():
     temperature, cooling_rate = 1000, 0.998
     t = temperature
-    weights_refresh_rate = 100
-    diversification_rate = 10
+    weights_refresh_rate = 200
+    diversification_rate = 250
     return [temperature, t, cooling_rate, weights_refresh_rate, diversification_rate]
 

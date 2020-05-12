@@ -242,3 +242,4 @@ dmypy.json
 *.txt
 *pdf
 *txt
+*svg
