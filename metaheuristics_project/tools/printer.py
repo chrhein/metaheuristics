@@ -10,13 +10,22 @@ def p(start, total_cost, times, cost_init,
     improvement = 100 * (cost_init - best_objective) / cost_init
 
     if times > 1:
-        print("Average cost:    %.2d" % round(avg_cost, 0))
-        print("Worst objective: %.2d" % round(worst_objective, 0))
-    print("Best objective:  %.2d" % round(best_objective, 0))
-    print("Improvement:     %.2f\n" % round(improvement, 2))
-    print("Best runtime:    " + "%.6f" % best_runtime + " seconds")
-    print("Worst runtime:   " + "%.6f" % worst_runtime + " seconds\n")
-    print("Best solution:", best_solution)
+
+        print("Worst objective:      %.2d" % round(worst_objective, 0))
+        print("Average objective:    %.2d" % round(avg_cost, 0))
+        print("Best objective:       %.2d" % round(best_objective, 0))
+
+        print("\nWorst improvement:    %.2f" % round(100 * (cost_init - worst_objective) / cost_init, 2))
+        print("Average improvement:  %.2f" % round(100 * (cost_init - avg_cost) / cost_init, 2))
+        print("Best improvement:     %.2f\n" % round(improvement, 2))
+        print("Best runtime:         " + "%.6f" % best_runtime + " seconds")
+        print("Worst runtime:        " + "%.6f" % worst_runtime + " seconds")
+    else:
+        print("Best objective:       %.2d" % round(best_objective, 0))
+        print("Improvement:          %.2f\n" % round(improvement, 2))
+        print("Runtime:              " + "%.6f" % best_runtime + " seconds")
+
+    print("\nBest solution:", best_solution)
 
     print("\nCompleted in " + "%.6f" % total_runtime + " seconds.\n")
     print("######################################################################\n")
