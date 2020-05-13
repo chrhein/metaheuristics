@@ -49,17 +49,23 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     a = par[1]
     weights_refresh_rate = par[2]
     diversification_rate = par[3]
+    reset = False
 
     while time.time() < end:
-        if its_since_upd > break_its:
+        if its_since_upd == break_its and reset is True:
             break
 
-        if its_since_upd % break_its/10 == 0:
+        if its_since_upd == break_its:
+            s = init_solution
+            s_cost = f(s)
+            reset = True
+            t0 = par[0]
             t = t0
+            its_since_upd = 0
+            found_solutions.clear()
 
         if its_since_upd > diversification_rate:
             current = obo.move_to_dummy(s)
-            # print("New solution:", current)
             diversification_its += 1
         else:
             current = s
@@ -120,7 +126,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             s_cost = f(s)
             its_since_upd = 0
             if s_cost < best_cost:
-                best = s
+                best = s.copy()
                 best_cost = f(best)
         elif check_solution(current) and rand_ii < p:
             s = current
@@ -191,7 +197,7 @@ def get_break_its():
 def its_without_updates_break():
     testing_mode = True
     if testing_mode:
-        return 10000
+        return 15000
     else:
         return get_break_its()
 
