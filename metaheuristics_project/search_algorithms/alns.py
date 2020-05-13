@@ -55,7 +55,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             break
 
         if its_since_upd > diversification_rate:
-            current = obo.weighted_one_insert(s)
+            current = obo.move_to_dummy(s)
             # print("New solution:", current)
             diversification_its += 1
         else:
@@ -137,8 +137,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
 
     for key, value in u_d.items():
         print("%d: %s" % (value, key))
-    print("\n%d: pseudo_random_one_reinsert" % diversification_its)
-    print("\nTotal iterations:", iteration, "\n")
+    print("\n%d: diversification" % diversification_its)
+    print("\nTotal iterations:", (iteration+diversification_its), "\n")
 
     return best
 
@@ -188,7 +188,7 @@ def get_break_its():
 def its_without_updates_break():
     testing_mode = True
     if testing_mode:
-        return 2500
+        return 10000
     else:
         return get_break_its()
 
@@ -196,7 +196,7 @@ def its_without_updates_break():
 def parameters():
     temperature, cooling_rate = 1000, 0.998
     t = temperature
-    weights_refresh_rate = 200
-    diversification_rate = 250
+    weights_refresh_rate = 100
+    diversification_rate = 500
     return [temperature, t, cooling_rate, weights_refresh_rate, diversification_rate]
 
