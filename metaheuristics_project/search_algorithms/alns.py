@@ -45,14 +45,17 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     par = parameters()
 
     t0 = par[0]
-    t = par[1]
-    a = par[2]
-    weights_refresh_rate = par[3]
-    diversification_rate = par[4]
+    t = t0
+    a = par[1]
+    weights_refresh_rate = par[2]
+    diversification_rate = par[3]
 
     while time.time() < end:
         if its_since_upd > break_its:
             break
+
+        if its_since_upd % break_its/10 == 0:
+            t = t0
 
         if its_since_upd > diversification_rate:
             current = obo.move_to_dummy(s)
@@ -125,7 +128,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         else:
             its_since_upd += 1
 
-        t = a * t0
+        t = a * t
         iteration += 1
 
     usage_dict = {}
@@ -194,9 +197,8 @@ def its_without_updates_break():
 
 
 def parameters():
-    temperature, cooling_rate = 1000, 0.998
-    t = temperature
-    weights_refresh_rate = 100
-    diversification_rate = 500
-    return [temperature, t, cooling_rate, weights_refresh_rate, diversification_rate]
+    temperature, cooling_rate = 38, 0.998
+    weights_refresh_rate = 75
+    diversification_rate = 250
+    return [temperature, cooling_rate, weights_refresh_rate, diversification_rate]
 
