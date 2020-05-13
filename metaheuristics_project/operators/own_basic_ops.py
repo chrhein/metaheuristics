@@ -9,27 +9,6 @@ from tools.route_handler import get_calls_including_zeroes, get_most_expensive_c
     get_routes_as_list_w_zeroes, list_to_solution
 
 
-def one_insert_most_expensive_call(solution):
-    calls = get_calls_including_zeroes(solution)
-    if not calls[x.vehicles + 1]:
-        return solution
-    cost_no_transport = get_most_expensive_calls(solution)
-    cnt_list = list(cost_no_transport.keys())
-    if not cnt_list or len(cnt_list) < 3:
-        return solution
-    most_expensive_call = cnt_list[random.randrange(0, 3)]
-    if most_expensive_call in calls[x.vehicles + 1]:
-        calls[x.vehicles + 1].remove(most_expensive_call)
-        calls[x.vehicles + 1].remove(most_expensive_call)
-        for i in range(1, x.vehicles + 2):
-            vehicle = x.vehicles_dict[i]
-            if most_expensive_call in vehicle.valid_calls:
-                calls[i].insert(random.randrange(0, len(calls[i])), most_expensive_call)
-                calls[i].insert(random.randrange(0, len(calls[i])), most_expensive_call)
-                break
-    return calls_to_solution(calls)
-
-
 def fill_vehicles(solution):
     a = take_from_dummy_place_first_suitable(solution)
     b = fill_vehicle(solution)

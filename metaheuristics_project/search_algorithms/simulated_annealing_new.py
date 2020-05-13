@@ -4,7 +4,7 @@ import operators.own_basic_ops as obo
 from feasibility_checking.cost_calculation import f
 from feasibility_checking.feasibility_check import check_solution
 from operators.best_travel_route import best_route, clear_br
-from operators.handle_most_expensive import remove_most_expensive_from_dummy, clear_rmefd
+from operators.handle_most_expensive import one_reinsert_most_expensive_from_dummy
 from operators.own_basic_ops import take_from_dummy_place_first_suitable
 from operators.tabu_shuffle import tabu_shuffle, swingers
 from operators.try_for_best import try_for_best
@@ -19,13 +19,12 @@ def simulated_annealing_new(init_solution):
     a = 0.998
     p1 = 0.25
     p2 = 0.5
-    clear_rmefd()
     clear_br()
     for i in range(1, 10000):
         progress_bar(i)
         rand = random.uniform(0, 1)
         if rand < p1:
-            new_solution = remove_most_expensive_from_dummy(incumbent)
+            new_solution = one_reinsert_most_expensive_from_dummy(incumbent)
         elif rand < p1 + p2:
             new_solution = obo.fill_vehicles(incumbent)
         else:

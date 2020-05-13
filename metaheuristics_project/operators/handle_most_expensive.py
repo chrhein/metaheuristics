@@ -2,15 +2,8 @@ import setup.file_handler as x
 from tools.route_handler import get_calls_including_zeroes, calls_to_solution, \
     most_expensive_dummy
 
-tested_solutions = set()
 
-
-def clear_rmefd():
-    global tested_solutions
-    tested_solutions.clear()
-
-
-def remove_most_expensive_from_dummy(solution):
+def one_reinsert_most_expensive_from_dummy(solution):
     most_expensive_calls = most_expensive_dummy(solution)
     if not most_expensive_calls:
         return solution

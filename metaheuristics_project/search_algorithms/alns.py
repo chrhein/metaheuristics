@@ -11,7 +11,7 @@ from feasibility_checking.feasibility_check import check_solution
 from operators.basic_operators import three_exchange, one_reinsert, two_exchange
 from operators.best_travel_route import best_route
 from operators.choose_operators import ops
-from operators.handle_most_expensive import remove_most_expensive_from_dummy
+from operators.handle_most_expensive import one_reinsert_most_expensive_from_dummy
 from operators.op_package.one_reinsert import pseudo_random_one_reinsert, fast_reinsert
 from operators.op_package.shuffle import shuffle
 from operators.op_package.swap import swap, triple_swap
@@ -52,17 +52,23 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     reset = False
 
     while time.time() < end:
-        if its_since_upd == break_its and reset is True:
+        if its_since_upd == break_its and reset is False:
             break
 
-        if its_since_upd == break_its:
-            s = init_solution
-            s_cost = f(s)
-            reset = True
-            t0 = par[0]
-            t = t0
-            its_since_upd = 0
-            found_solutions.clear()
+        # if its_since_upd == break_its:
+        #     s = init_solution
+        #     s_cost = f(s)
+        #     reset = True
+        #     t0 = par[0]
+        #     t = t0
+        #     its_since_upd = 0
+        #     curr_weights.clear()
+        #     usage.clear()
+        #     found_solutions.clear()
+        #     for i in range(len(operators)):
+        #         curr_weights.append(1.0)
+        #         usage.append(0)
+        #     prev_weights = curr_weights.copy()
 
         if its_since_upd > diversification_rate:
             current = obo.move_to_dummy(s)
@@ -91,14 +97,12 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = pseudo_random_two_exchange
         elif chosen_op == "pseudo_random_three_exchange":
             oc = pseudo_random_three_exchange
-        elif chosen_op == "remove_most_expensive_from_dummy":
-            oc = remove_most_expensive_from_dummy
+        elif chosen_op == "one_reinsert_most_expensive_from_dummy":
+            oc = one_reinsert_most_expensive_from_dummy
         elif chosen_op == "weighted_one_insert":
             oc = obo.weighted_one_insert
         elif chosen_op == "move_to_dummy":
             oc = obo.move_to_dummy
-        elif chosen_op == "one_insert_most_expensive_call":
-            oc = obo.one_insert_most_expensive_call
         elif chosen_op == "two_exchange":
             oc = two_exchange
         elif chosen_op == "three_exchange":
@@ -189,7 +193,7 @@ def get_break_its():
     if calls < 10:
         return 2500
     elif calls < 50:
-        return 5000
+        return 10000
     else:
         return 10000
 
@@ -197,7 +201,7 @@ def get_break_its():
 def its_without_updates_break():
     testing_mode = True
     if testing_mode:
-        return 15000
+        return 10000
     else:
         return get_break_its()
 
