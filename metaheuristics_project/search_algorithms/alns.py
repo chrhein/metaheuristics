@@ -186,7 +186,7 @@ def get_break_its():
 
 
 def its_without_updates_break():
-    testing_mode = False
+    testing_mode = True
     if testing_mode:
         return 2500
     else:
