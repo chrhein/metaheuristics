@@ -8,7 +8,7 @@ def ops():
           # "pseudo_random_one_reinsert",
           "pseudo_random_three_exchange",
           "pseudo_random_two_exchange",
-          "swap",
+          # "swap",
           "shuffle",
           "take_from_dummy_place_first_suitable",
           # "three_exchange",
