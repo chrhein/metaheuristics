@@ -14,9 +14,8 @@ from operators.choose_operators import ops
 from operators.handle_most_expensive import remove_most_expensive_from_dummy
 from operators.op_package.one_reinsert import pseudo_random_one_reinsert, fast_reinsert
 from operators.op_package.shuffle import shuffle
-from operators.op_package.swap import swap
+from operators.op_package.swap import swap, triple_swap
 from operators.op_package.three_exchange import pseudo_random_three_exchange, fast_three_exchange
-from operators.op_package.triple_swap import triple_swap
 from operators.op_package.two_exchange import pseudo_random_two_exchange
 from operators.try_for_best import try_for_best
 
@@ -27,6 +26,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     best = init_solution
     best_cost = f(best)
     global found_solutions
+    found_solutions.clear()
 
     operators = ops()
     break_its = its_without_updates_break()
@@ -55,7 +55,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             break
 
         if its_since_upd > diversification_rate:
-            current = pseudo_random_one_reinsert(s)
+            current = obo.weighted_one_insert(s)
             # print("New solution:", current)
             diversification_its += 1
         else:
@@ -178,7 +178,7 @@ def operator(op, curr_sol, curr_weights, index, usage, variable, f_s, f_best):
 def get_break_its():
     calls = x.calls
     if calls < 10:
-        return 1500
+        return 2500
     elif calls < 50:
         return 5000
     else:
@@ -186,9 +186,9 @@ def get_break_its():
 
 
 def its_without_updates_break():
-    testing_mode = True
+    testing_mode = False
     if testing_mode:
-        return 1000
+        return 2500
     else:
         return get_break_its()
 
