@@ -18,6 +18,7 @@ from operators.op_package.shuffle import shuffle
 from operators.op_package.swap import swap, triple_swap
 from operators.op_package.three_exchange import pseudo_random_three_exchange, fast_three_exchange
 from operators.op_package.two_exchange import pseudo_random_two_exchange
+from operators.op_package.x_one_reinserts_inside_vehicle import x_one_reinserts_inside_vehicle
 from operators.try_for_best import try_for_best
 
 
@@ -50,17 +51,26 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     a = par[1]
     weights_refresh_rate = par[2]
     diversification_rate = par[3]
-    tot_its = 0
+    tot_its = 1
 
     while time.time() < end:
-        if its_since_upd == break_its and tot_its == 10:
+        if its_since_upd == break_its and tot_its == 5:
             break
 
         if its_since_upd == break_its:
             s = init_solution
             s_cost = f(s)
             tot_its += 1
+            t0 = par[0]
+            t = t0
             its_since_upd = 0
+            curr_weights.clear()
+            usage.clear()
+            found_solutions.clear()
+            for i in range(len(operators)):
+                curr_weights.append(1.0)
+                usage.append(0)
+            prev_weights = curr_weights.copy()
 
         if its_since_upd > diversification_rate:
             current = obo.move_to_dummy(s)
@@ -111,6 +121,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = obo.change_route
         elif chosen_op == "shuffle":
             oc = shuffle
+        elif chosen_op == "x_one_reinserts_inside_vehicle":
+            oc = x_one_reinserts_inside_vehicle
 
         op_index = operators.index(chosen_op)
         op = operator(oc, current, curr_weights,
@@ -197,7 +209,7 @@ def get_break_its():
 def its_without_updates_break():
     testing_mode = True
     if testing_mode:
-        return 2500
+        return 5000
     else:
         return get_break_its()
 

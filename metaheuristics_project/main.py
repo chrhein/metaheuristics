@@ -1,9 +1,5 @@
 from generators.solution_generator import solution_generator
 from initializers.alns_init import alns_init
-from initializers.local_search_init import local_search_initializer
-from initializers.random_search_init import random_solution_initializer
-from initializers.simulated_annealing_init import simulated_annealing_initializer
-from initializers.simulated_annealing_new_init import new_simulated_annealing_initializer
 from setup.file_handler import get_runtime
 
 
@@ -11,13 +7,16 @@ def main():
     init_solution = solution_generator()
     times = 10
     runtime = get_runtime()
-    r = runtime - 0.01
-    # r = runtime
-
-    # random_solution_initializer(init_solution, times)
-    # local_search_initializer(init_solution, times)
-    # simulated_annealing_initializer(init_solution, times)
-    # new_simulated_annealing_initializer(init_solution, times)
+    if runtime == 10:
+        r = runtime - 2
+    elif runtime == 20:
+        r = runtime - 4
+    elif runtime == 50:
+        r = runtime - 10
+    elif runtime == 120:
+        r = runtime - 18
+    elif runtime == 400:
+        r = runtime - 50
 
     print("\nMaximum runtime:", runtime, "seconds.\n")
     alns_init(init_solution, times, r)
