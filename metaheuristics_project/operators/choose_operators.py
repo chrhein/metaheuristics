@@ -1,6 +1,5 @@
 def ops():
     op = ["change_route",
-          "x_one_reinserts_inside_vehicle",
           "fill_vehicle",
           # "move_to_dummy",
           "move_to_next_valid_vehicle",
@@ -17,6 +16,8 @@ def ops():
           # "three_exchange",
           "triple_swap",
           # "two_exchange",
-          "weighted_one_insert"
+          "weighted_one_insert",
+          "x_one_reinserts_inside_vehicle",
+          "x_one_reinserts_inside_vehicle_dsc"
           ]
     return op

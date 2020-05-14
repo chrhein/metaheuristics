@@ -18,7 +18,8 @@ from operators.op_package.shuffle import shuffle
 from operators.op_package.swap import swap, triple_swap
 from operators.op_package.three_exchange import pseudo_random_three_exchange, fast_three_exchange
 from operators.op_package.two_exchange import pseudo_random_two_exchange
-from operators.op_package.x_one_reinserts_inside_vehicle import x_one_reinserts_inside_vehicle
+from operators.op_package.x_one_reinserts_inside_vehicle import x_one_reinserts_inside_vehicle, \
+    x_one_reinserts_inside_vehicle_dsc
 from operators.try_for_best import try_for_best
 
 
@@ -123,6 +124,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = shuffle
         elif chosen_op == "x_one_reinserts_inside_vehicle":
             oc = x_one_reinserts_inside_vehicle
+        elif chosen_op == "x_one_reinserts_inside_vehicle_dsc":
+            oc = x_one_reinserts_inside_vehicle_dsc
 
         op_index = operators.index(chosen_op)
         op = operator(oc, current, curr_weights,
@@ -209,7 +212,7 @@ def get_break_its():
 def its_without_updates_break():
     testing_mode = True
     if testing_mode:
-        return 5000
+        return 10000
     else:
         return get_break_its()
 
