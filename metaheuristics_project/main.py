@@ -5,7 +5,7 @@ from setup.file_handler import get_runtime
 
 def main():
     init_solution = solution_generator()
-    times = 10
+    times = 1
     runtime = get_runtime()
 
     print("\nMaximum runtime:", runtime, "seconds.\n")

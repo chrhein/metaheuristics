@@ -206,16 +206,14 @@ def operator(op, curr_sol, curr_weights, index, usage, variable, f_s, f_best):
 
 def get_break_its():
     calls = x.calls
-    if calls < 10:
-        return 2500
-    elif calls < 50:
-        return 10000
+    if calls < 50:
+        return 7500
     else:
-        return 10000
+        return 15000
 
 
 def its_without_updates_break():
-    testing_mode = True
+    testing_mode = False
     if testing_mode:
         return 7500
     else:
