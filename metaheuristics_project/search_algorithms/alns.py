@@ -13,7 +13,8 @@ from operators.best_travel_route import best_route
 from operators.choose_operators import ops
 from operators.handle_most_expensive import one_reinsert_most_expensive_from_dummy, one_reinsert_most_expensive_call, \
     one_reinsert_most_expensive
-from operators.op_package.one_reinsert import pseudo_random_one_reinsert, fast_reinsert
+from operators.op_package.one_reinsert import pseudo_random_one_reinsert, fast_reinsert, one_reinsert_from_dummy, \
+    most_expensive_one_reinsert_from_dummy
 from operators.op_package.shuffle import shuffle
 from operators.op_package.swap import swap, triple_swap
 from operators.op_package.three_exchange import pseudo_random_three_exchange, fast_three_exchange
@@ -52,11 +53,11 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     a = par[1]
     weights_refresh_rate = par[2]
     diversification_rate = par[3]
-    tot_its = 1
+    tot_its = 0
 
     while time.time() < end:
-        if its_since_upd == break_its and tot_its == 5:
-            break
+        # if its_since_upd == break_its and tot_its == 2:
+        #     break
 
         if its_since_upd == break_its:
             s = init_solution
@@ -100,6 +101,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = pseudo_random_two_exchange
         elif chosen_op == "pseudo_random_three_exchange":
             oc = pseudo_random_three_exchange
+        elif chosen_op == "one_reinsert_from_dummy":
+            oc = one_reinsert_from_dummy
         elif chosen_op == "one_reinsert_most_expensive":
             oc = one_reinsert_most_expensive
         elif chosen_op == "one_reinsert_most_expensive_from_dummy":
@@ -114,6 +117,8 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
             oc = two_exchange
         elif chosen_op == "three_exchange":
             oc = three_exchange
+        elif chosen_op == "most_expensive_one_reinsert_from_dummy":
+            oc = most_expensive_one_reinsert_from_dummy
         elif chosen_op == "move_vehicle_to_dummy":
             oc = obo.move_vehicle_to_dummy
         elif chosen_op == "move_to_next_valid_vehicle":
@@ -212,7 +217,7 @@ def get_break_its():
 def its_without_updates_break():
     testing_mode = True
     if testing_mode:
-        return 10000
+        return 7500
     else:
         return get_break_its()
 
