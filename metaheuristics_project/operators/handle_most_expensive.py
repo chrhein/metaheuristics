@@ -33,11 +33,11 @@ def one_reinsert_most_expensive(solution):
     cnt_list = list(cost_no_transport.keys())
     if not cnt_list or len(cnt_list) <= 2:
         return solution
-    z = int(len(cnt_list)/2)
+    z = int(len(cnt_list) / 2)
     most_expensive_call = cnt_list[random.randrange(0, int(z))]
     if most_expensive_call in v:
         v = [i for i in v if i != most_expensive_call]
-        for i in range(1, x.vehicles+1):
+        for i in range(1, x.vehicles + 1):
             vehicle = x.vehicles_dict[i]
             if most_expensive_call in vehicle.valid_calls:
                 calls[i].insert(random.randrange(0, len(calls[i])), most_expensive_call)

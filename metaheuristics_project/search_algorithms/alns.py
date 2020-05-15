@@ -1,27 +1,19 @@
-import copy
 import math
 import random
 import time
 
-import setup.file_handler as x
-
 import operators.own_basic_ops as obo
+import setup.file_handler as x
 from feasibility_checking.cost_calculation import f
 from feasibility_checking.feasibility_check import check_solution
-from operators.basic_operators import three_exchange, one_reinsert, two_exchange
-from operators.best_travel_route import best_route
 from operators.choose_operators import ops
-from operators.handle_most_expensive import one_reinsert_most_expensive_from_dummy, one_reinsert_most_expensive_call, \
-    one_reinsert_most_expensive
-from operators.op_package.one_reinsert import pseudo_random_one_reinsert, fast_reinsert, one_reinsert_from_dummy, \
+from operators.handle_most_expensive import one_reinsert_most_expensive_call
+from operators.op_package.one_reinsert import one_reinsert_from_dummy, \
     most_expensive_one_reinsert_from_dummy
 from operators.op_package.shuffle import shuffle
 from operators.op_package.swap import swap, triple_swap
-from operators.op_package.three_exchange import pseudo_random_three_exchange, fast_three_exchange
-from operators.op_package.two_exchange import pseudo_random_two_exchange
 from operators.op_package.x_one_reinserts_inside_vehicle import x_one_reinserts_inside_vehicle, \
     x_one_reinserts_inside_vehicle_dsc
-from operators.try_for_best import try_for_best
 
 
 def adaptive_large_neighborhood_search(init_solution, runtime):
@@ -56,8 +48,6 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     tot_its = 0
 
     while time.time() < end:
-        # if its_since_upd == break_its and tot_its == 2:
-        #     break
 
         if its_since_upd == break_its:
             s = init_solution
@@ -89,34 +79,14 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
         chosen_op = random.choices(operators, prev_weights, k=1).pop(0)
         if chosen_op == "take_from_dummy_place_first_suitable":
             oc = obo.take_from_dummy_place_first_suitable
-        elif chosen_op == "fill_vehicle":
-            oc = obo.fill_vehicle
         elif chosen_op == "swap":
             oc = swap
         elif chosen_op == "triple_swap":
             oc = triple_swap
-        elif chosen_op == "pseudo_random_one_reinsert":
-            oc = pseudo_random_one_reinsert
-        elif chosen_op == "pseudo_random_two_exchange":
-            oc = pseudo_random_two_exchange
-        elif chosen_op == "pseudo_random_three_exchange":
-            oc = pseudo_random_three_exchange
         elif chosen_op == "one_reinsert_from_dummy":
             oc = one_reinsert_from_dummy
-        elif chosen_op == "one_reinsert_most_expensive":
-            oc = one_reinsert_most_expensive
-        elif chosen_op == "one_reinsert_most_expensive_from_dummy":
-            oc = one_reinsert_most_expensive_from_dummy
         elif chosen_op == "one_reinsert_most_expensive_call":
             oc = one_reinsert_most_expensive_call
-        elif chosen_op == "weighted_one_insert":
-            oc = obo.weighted_one_insert
-        elif chosen_op == "move_to_dummy":
-            oc = obo.move_to_dummy
-        elif chosen_op == "two_exchange":
-            oc = two_exchange
-        elif chosen_op == "three_exchange":
-            oc = three_exchange
         elif chosen_op == "most_expensive_one_reinsert_from_dummy":
             oc = most_expensive_one_reinsert_from_dummy
         elif chosen_op == "move_vehicle_to_dummy":
@@ -167,7 +137,7 @@ def adaptive_large_neighborhood_search(init_solution, runtime):
     for key, value in u_d.items():
         print("%d: %s" % (value, key))
     print("\n%d: diversification" % diversification_its)
-    print("\nTotal iterations:", (iteration+diversification_its), "\n")
+    print("\nTotal iterations:", (iteration + diversification_its), "\n")
 
     return best
 
@@ -225,4 +195,3 @@ def parameters():
     weights_refresh_rate = 125
     diversification_rate = 250
     return [temperature, cooling_rate, weights_refresh_rate, diversification_rate]
-
