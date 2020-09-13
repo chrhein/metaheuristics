@@ -14,13 +14,13 @@ def get_runtime():
     if filename == c7:
         return 10
     elif filename == c18:
-        return 30
+        return 20
     elif filename == c35:
-        return 70
+        return 50
     elif filename == c80:
-        return 200
+        return 120
     elif filename == c130:
-        return 500
+        return 400
 
 
 with open(filename, "r") as f:
